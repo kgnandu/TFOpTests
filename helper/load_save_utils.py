@@ -9,7 +9,7 @@ Clean this up!!
  - add links
  - credit where freeze_graph comes from
 '''
-base_dir = "/Users/susaneraly/SKYMIND/dl4j-test-resources/src/main/resources/tf_graphs/examples"
+base_dir = "/home/agibsonccc/pbdirs"
 
 '''
 Clean this up some day to one class that just takes filename with path and array

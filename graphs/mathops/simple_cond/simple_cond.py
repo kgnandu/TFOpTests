@@ -8,10 +8,10 @@ in0 = tf.Variable(np.linspace(1, 4, 4) + 1, name='greater')
 in1 = tf.Variable(np.linspace(1, 4, 4), name='lesser')
 
 
-def f1(): return in0 / 2
+def f1(): return in0 / tf.Variable(2.0,name='div_in0',dtype=tf.float64)
 
 
-def f2(): return in1 / 4
+def f2(): return in1 / tf.Variable(4.0,name='div_in1',dtype=tf.float64)
 
 
 def check(): return tf.reduce_sum(in0 - in1) < 2
