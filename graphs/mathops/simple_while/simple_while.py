@@ -4,11 +4,10 @@ import tensorflow as tf
 from graphs.mathops.simple_cond import get_input
 from helper import load_save_utils
 
-i = tf.Variable(tf.constant(0),name='loop_var')
+i1 = tf.Variable(tf.constant(0),name='loop_var')
 c = lambda i: tf.less(i, 10)
 b = lambda i: tf.add(i, 1)
-r = tf.while_loop(c, b, [i],name='loop_result')
-
+r = tf.while_loop(c, b, [i1],name='output')
 
 
 
