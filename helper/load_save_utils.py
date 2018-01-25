@@ -70,6 +70,7 @@ def freeze_n_save_graph(save_dir):
                               clear_devices=True,
                               initializer_nodes="")
 
+
 '''
 def save_predictions(save_dir, outputs):
     for count,output in enumerate(outputs):
@@ -115,6 +116,18 @@ def load_frozen_graph(save_dir):
         graph_def.ParseFromString(f.read())
     with graph.as_default():
         tf.import_graph_def(graph_def)
+    return graph
+
+
+def load_external_graph(model_file):
+    graph = tf.Graph()
+    graph_def = tf.GraphDef()
+
+    with open(model_file, "rb") as f:
+        graph_def.ParseFromString(f.read())
+    with graph.as_default():
+        tf.import_graph_def(graph_def)
+
     return graph
 
 
