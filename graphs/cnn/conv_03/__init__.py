@@ -5,6 +5,7 @@ model_name = "conv_3"
 save_dir = model_name
 # [batch, in_height, in_width, in_channels].
 imsize = [4, 128, 128, 4]
+imsize_placeholder = [None, 128, 128, 4]
 
 def get_input(name):
     np.random.seed(13)

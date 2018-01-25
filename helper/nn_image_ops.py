@@ -33,6 +33,7 @@ class NNImageOps:
 
     def set_filter_hw_inout(self, h, w, in_ch, out_ch):
         self.filter_size = [h, w, in_ch, out_ch]
+        self.set_filter(self.filter_size)
 
     def set_stride_hw(self, strideh, stridew):
         # strides = [1, stride, stride, 1]

@@ -1,10 +1,10 @@
 import tensorflow as tf
 
-from graphs.cnn.conv_03 import imsize, get_input, save_dir
+from graphs.cnn.conv_03 import imsize, get_input, save_dir, imsize_placeholder
 from helper import load_save_utils
 
 my_feed_dict = {}
-in0 = tf.placeholder("float", imsize, name="input_0")
+in0 = tf.placeholder("float", imsize_placeholder, name="input_0")
 my_feed_dict[in0] = get_input("input_0")
 
 '''
