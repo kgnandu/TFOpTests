@@ -9,7 +9,7 @@ Clean this up!!
  - add links
  - credit where freeze_graph comes from
 '''
-base_dir = "/Users/susaneraly/SKYMIND/dl4j-test-resources/src/main/resources/tf_graphs/examples"
+base_dir = "/home/agibsonccc/pbdirs"
 
 '''
 Clean this up some day to one class that just takes filename with path and array
@@ -47,7 +47,7 @@ def save_graph(sess, all_saver, save_dir):
     tf.train.write_graph(sess.graph_def, base_dir + "/" + save_dir, "model.txt", True)
 
 
-def freeze_n_save_graph(save_dir):
+def freeze_n_save_graph(save_dir,output_node_names="output"):
     checkpoint = tf.train.get_checkpoint_state(base_dir + "/" + save_dir)
     input_checkpoint = checkpoint.model_checkpoint_path
     print input_checkpoint
@@ -64,7 +64,7 @@ def freeze_n_save_graph(save_dir):
                               input_checkpoint=input_checkpoint,
                               output_graph=output_graph,
                               input_binary=False,
-                              output_node_names="output",
+                              output_node_names=output_node_names,
                               restore_op_name="save/restore_all",
                               filename_tensor_name="save/Const:0",
                               clear_devices=True,

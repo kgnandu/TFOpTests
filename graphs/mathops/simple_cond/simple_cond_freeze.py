@@ -1,4 +1,4 @@
-from . import save_dir, get_inputs
+from graphs.mathops.simple_cond import save_dir, get_inputs
 from helper import load_save_utils
 
 load_save_utils.freeze_n_save_graph(save_dir)
