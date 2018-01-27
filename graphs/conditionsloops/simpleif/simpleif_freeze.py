@@ -1,4 +1,4 @@
-from graphs.cnn.pool_test import get_inputs, save_dir
+from graphs.conditionsloops.simpleif import get_inputs, save_dir
 from helper import load_save_utils
 
 load_save_utils.freeze_n_save_graph(save_dir)

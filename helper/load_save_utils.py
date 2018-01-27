@@ -9,7 +9,7 @@ Clean this up!!
  - add links
  - credit where freeze_graph comes from
 '''
-base_dir = "/home/agibsonccc/pbdirs"
+base_dir = "/Users/susaneraly/SKYMIND/dl4j-test-resources/src/main/resources/tf_graphs/examples"
 
 '''
 Clean this up some day to one class that just takes filename with path and array
@@ -47,7 +47,7 @@ def save_graph(sess, all_saver, save_dir):
     tf.train.write_graph(sess.graph_def, base_dir + "/" + save_dir, "model.txt", True)
 
 
-def freeze_n_save_graph(save_dir,output_node_names="output"):
+def freeze_n_save_graph(save_dir, output_node_names="output"):
     checkpoint = tf.train.get_checkpoint_state(base_dir + "/" + save_dir)
     input_checkpoint = checkpoint.model_checkpoint_path
     print input_checkpoint
@@ -148,16 +148,21 @@ def save_intermediate_nodes(save_dir, input_dict):
             continue
         print("=====")
         print op.name
-        if "while" in op.name:
+        print op.type
+        if op.type == "Switch":
             print ("SKIPPING")
             continue
         output_num = 0
         for op_output in op.outputs:
             print op_output.name
             with tf.Session(graph=graph) as sess:
-                op_prediction = sess.run(op_output, feed_dict=placeholder_dict)
-                save_to = ".".join(["____".join(op_output.name.split("/")[1:]).split(":")[0], str(output_num)])
-                save_intermediate(op_prediction, save_to, save_dir)
-                print op_prediction
-                print("=====")
+                try:
+                    op_prediction = sess.run(op_output, feed_dict=placeholder_dict)
+                    save_to = ".".join(["____".join(op_output.name.split("/")[1:]).split(":")[0], str(output_num)])
+                    save_intermediate(op_prediction, save_to, save_dir)
+                    print op_prediction
+                    print("=====")
+                except:
+                    print("SKIPPING")
+                    print("=====")
             output_num += 1

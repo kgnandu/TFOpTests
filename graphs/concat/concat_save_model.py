@@ -8,7 +8,6 @@ import tensorflow as tf
 from helper import load_save_utils
 from graphs.concat import save_dir
 
-
 if __name__ == '__main__':
     # init auto-encoder
 
@@ -22,7 +21,6 @@ if __name__ == '__main__':
         init = tf.global_variables_initializer()
         all_saver = tf.train.Saver()
         sess.run(init)
-        prediction = np.reshape(np.asarray(sess.run([result],feed_dict={})),result.shape)
+        prediction = np.reshape(np.asarray(sess.run([result], feed_dict={})), result.shape)
         load_save_utils.save_graph(sess, all_saver, save_dir)
         load_save_utils.save_prediction(save_dir, prediction)
-
