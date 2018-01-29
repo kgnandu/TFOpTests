@@ -2,6 +2,7 @@ import tensorflow as tf
 from graphs.cnn.conv_02 import save_dir, imsize, get_input
 from helper import load_save_utils
 
+tf.set_random_seed(13)
 my_feed_dict = {}
 in0 = tf.placeholder("float", imsize, name="input_0")
 my_feed_dict[in0] = get_input("input_0")
@@ -22,12 +23,13 @@ name: Optional name for the returned tensor.
 '''
 
 # [filter_height, filter_width, in_channels, out_channels]. in_channels must match between input and filter.
-filter_one = tf.Variable(tf.random_uniform([4, 5, imsize[-1], imsize[-1] / 2]), name="filter1")
+filter_one = tf.Variable(tf.random_uniform([4, 5, imsize[-1], imsize[-1] / 2], seed=13), name="filter1")
 
 atrous_one = tf.nn.atrous_conv2d(in0, filters=filter_one, rate=8, padding='SAME', name="atrous_one")
 
-filter_two = tf.Variable(tf.random_uniform([31, 31, 2, 1]), name="filter2")
-finish = tf.nn.atrous_conv2d(atrous_one, filters=filter_two, rate=2, padding='VALID', name="output")
+filter_two = tf.Variable(tf.random_uniform([31, 31, 2, 1], seed=17), name="filter2")
+prefinish = tf.nn.atrous_conv2d(atrous_one, filters=filter_two, rate=2, padding='VALID')
+finish = tf.identity(prefinish, name="output")
 
 init = tf.global_variables_initializer()
 all_saver = tf.train.Saver()

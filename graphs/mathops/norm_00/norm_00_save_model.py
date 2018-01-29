@@ -135,12 +135,16 @@ if __name__ == "__main__":
 '''
 import tensorflow as tf
 
+np.random.seed(13)
+tf.set_random_seed(13)
+
 
 def _GetNormOpTest(dtype_, shape_, ord_, axis_, keep_dims_, use_static_shape_, save_dir_):
     def _CompareNorm(matrix):
         # tf_matrix = tf.Variable(matrix,name="input")
-        in0 = tf.Variable(tf.random_normal(matrix.shape), name="in0", dtype=tf.float32)
-        tf_matrix = tf.placeholder("float", matrix.shape, name="input") + in0
+        tf_in = tf.placeholder("float", matrix.shape, name="input")
+        in0 = tf.Variable(tf.random_normal(matrix.shape, seed=13), name="in0", dtype=tf.float32)
+        tf_matrix = tf_in + in0
         tf_norm = linalg_ops.norm(
             tf_matrix, ord=ord_, axis=axis_, keep_dims=keep_dims_, name="norm_op")
         output = tf.identity(tf_norm, name="output")
@@ -154,7 +158,9 @@ def _GetNormOpTest(dtype_, shape_, ord_, axis_, keep_dims_, use_static_shape_, s
             #        tf_matrix, ord=ord_, axis=axis_, keep_dims=keep_dims_)
             #    tf_norm_val = sess.run(tf_norm)
             # else:
-            prediction = sess.run(output, feed_dict={tf_matrix: matrix})
+            prediction = sess.run(output, feed_dict={tf_in: matrix})
+            print ("Here is the prediction")
+            print prediction
             load_save_utils.save_input(matrix, "input", save_dir_)
             load_save_utils.save_graph(sess, all_saver, save_dir_)
             load_save_utils.save_prediction(save_dir_, prediction)
@@ -175,6 +181,7 @@ def _GetNormOpTest(dtype_, shape_, ord_, axis_, keep_dims_, use_static_shape_, s
             print("Not supported by tf.norm")
             print("==========================================================")
             return
+        np.random.seed(13)
         matrix = np.random.randn(*shape_).astype(dtype_)
         test_info = "/Users/susaneraly/SKYMIND/dl4j-test-resources/src/main/resources/tf_graphs/examples/" + save_dir_i_ + "/test.info"
         print "writing to...",
@@ -207,17 +214,17 @@ def _GetNormOpTest(dtype_, shape_, ord_, axis_, keep_dims_, use_static_shape_, s
 use_static_shape = False
 dtype = np.float32
 test_num = 0
-#for rows in 2, 5:
+# for rows in 2, 5:
 for rows in [2]:
-    #for cols in 2, 5:
+    # for cols in 2, 5:
     for cols in [5]:
-        #for batch in [], [2], [2, 3]:
+        # for batch in [], [2], [2, 3]:
         for batch in [[]]:
             shape = batch + [rows, cols]
             for ord in "euclidean", "fro", 0.5, 1, 2, np.inf:
-                #for axis in [None, (-2, -1), (-1, -2), -len(shape), 0, len(shape) - 1]:
+                # for axis in [None, (-2, -1), (-1, -2), -len(shape), 0, len(shape) - 1]:
                 for axis in [None, (-2, -1)]:
-                    #for keep_dims in False, True:
+                    # for keep_dims in False, True:
                     for keep_dims in [False]:
                         name = "%s_ord_%s_axis_%s_%s" % (
                             "_".join(map(str, shape)), ord, axis,

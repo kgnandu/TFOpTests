@@ -6,7 +6,7 @@ import random
 import numpy as np
 import tensorflow as tf
 from helper import load_save_utils
-from graphs.ae import save_dir
+from graphs.mlp.ae import save_dir
 
 '''
 define an auto-encode
@@ -67,8 +67,6 @@ class self_coding_network(object):
         return layer_2
 
 
-
-
 if __name__ == '__main__':
     # init auto-encoder
     aa = self_coding_network(40, 60, 2)
@@ -77,10 +75,9 @@ if __name__ == '__main__':
     with tf.Session() as sess:
         sess.run(init)
         n_in = 676
-        inputs = {'input:0': np.reshape(np.linspace(1,n_in,n_in),(1,n_in))}
-        inputs_save = {'input': np.reshape(np.linspace(1,n_in,n_in),(1,n_in))}
-        prediction = np.asarray(sess.run([aa.encoder_op],feed_dict=inputs))
+        inputs = {'input:0': np.reshape(np.linspace(1, n_in, n_in), (1, n_in))}
+        inputs_save = {'input': np.reshape(np.linspace(1, n_in, n_in), (1, n_in))}
+        prediction = sess.run(aa.encoder_op, feed_dict=inputs)
         load_save_utils.save_graph(sess, all_saver, save_dir)
     load_save_utils.save_prediction(save_dir, prediction)
-    load_save_utils.save_input(np.linspace(1,n_in,n_in),'input',save_dir)
-
+    load_save_utils.save_input(np.linspace(1, n_in, n_in), 'input', save_dir)
