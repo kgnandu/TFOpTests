@@ -10,13 +10,13 @@ training_steps = 1000
 display_step = 100
 
 # tf Graph input
-X = tf.placeholder("float", [None, featuresize, timesteps - 1], name="input")
-Y = tf.placeholder("float", [None, featuresize])
+X = tf.placeholder("float64", [None, featuresize, timesteps - 1], name="input")
+Y = tf.placeholder("float64", [None, featuresize])
 weights = {
-    'out': tf.Variable(tf.random_normal([num_hidden, featuresize]))
+    'out': tf.Variable(tf.random_normal([num_hidden, featuresize], dtype=tf.float64))
 }
 biases = {
-    'out': tf.Variable(tf.random_normal([featuresize]))
+    'out': tf.Variable(tf.random_normal([featuresize], dtype=tf.float64))
 }
 
 
@@ -26,12 +26,12 @@ def RNN(data, target):
         cell = tf.contrib.rnn.GRUCell(num_hidden)  # Or LSTMCell(num_units)
         cells.append(cell)
     network = tf.contrib.rnn.MultiRNNCell(cells)
-    output, _ = tf.nn.dynamic_rnn(network, data, dtype=tf.float32)
+    output, _ = tf.nn.dynamic_rnn(network, data, dtype=tf.float64)
     output = tf.transpose(output, [1, 0, 2])
     last = tf.gather(output, int(output.get_shape()[0]) - 1)
     # Softmax layer.
-    weight = tf.Variable(tf.truncated_normal([num_hidden, int(target.get_shape()[1])], stddev=0.01))
-    bias = tf.Variable(tf.constant(0.1, shape=[int(target.get_shape()[1])]))
+    weight = tf.Variable(tf.truncated_normal([num_hidden, int(target.get_shape()[1])], stddev=0.01, dtype=tf.float64))
+    bias = tf.Variable(tf.constant(0.1, shape=[int(target.get_shape()[1])],dtype=tf.float64))
     aprediction = tf.nn.softmax(tf.matmul(last, weight) + bias, name="output")
     return aprediction
 

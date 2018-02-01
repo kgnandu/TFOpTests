@@ -10,33 +10,33 @@ training_steps = 10000
 display_step = 10
 
 # tf Graph input
-X = tf.placeholder("float", [None, featuresize, timesteps-1], name="input")
-Y = tf.placeholder("float", [None, featuresize])
+X = tf.placeholder("float64", [None, featuresize, timesteps - 1], name="input")
+Y = tf.placeholder("float64", [None, featuresize])
 weights = {
-    'out': tf.Variable(tf.random_normal([num_hidden, featuresize]))
+    'out': tf.Variable(tf.random_normal([num_hidden, featuresize], dtype=tf.float64))
 }
 biases = {
-    'out': tf.Variable(tf.random_normal([featuresize]))
+    'out': tf.Variable(tf.random_normal([featuresize], dtype=tf.float64))
 }
 
 
 def RNN(x, weights, biases):
-    x = tf.unstack(x,axis=2)
+    x = tf.unstack(x, axis=2)
     lstm_cell = rnn.GRUCell(num_hidden)
-    #inputs: A length T list of inputs,
+    # inputs: A length T list of inputs,
     #  each a Tensor of shape [batch_size, input_size], or a nested tuple of such elements.
-    outputs, states = rnn.static_rnn(lstm_cell, x, dtype=tf.float32)
+    outputs, states = rnn.static_rnn(lstm_cell, x, dtype=tf.float64)
     return tf.matmul(outputs[-1], weights['out']) + biases['out']
 
 
 preout = RNN(X, weights, biases)
-output = tf.identity(preout,name="output")
+output = tf.identity(preout, name="output")
 
 # Define loss and optimizer
-loss_op = tf.reduce_sum(tf.pow(output-Y, 2))/(2*minibatch) #MSE
+loss_op = tf.reduce_sum(tf.pow(output - Y, 2)) / (2 * minibatch)  # MSE
 optimizer = tf.train.GradientDescentOptimizer(learning_rate=learning_rate)
 train_op = optimizer.minimize(loss_op)
-accuracy = tf.pow(output-Y,2)
+accuracy = tf.pow(output - Y, 2)
 
 all_saver = tf.train.Saver()
 init = tf.global_variables_initializer()
@@ -53,7 +53,7 @@ with tf.Session() as sess:
                                                                  Y: get_output("output")})
             print("Step " + str(step) + ", Loss= " + \
                   "{:.4f}".format(loss))
-            #print(acc)
+            # print(acc)
     print("Optimization Finished!")
 
     prediction = sess.run(output, feed_dict={X: get_input("input")})

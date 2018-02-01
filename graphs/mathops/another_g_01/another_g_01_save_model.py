@@ -2,10 +2,12 @@ import tensorflow as tf
 from graphs.mathops.another_g_01 import get_input, save_dir
 from helper import load_save_utils
 
+tf.set_random_seed(13)
+
 my_feed_dict = {}
-in1 = tf.placeholder("float", [16, 16], name="input_1")
-in2 = tf.placeholder("float", [16, 16], name="input_2")
-k0 = tf.Variable(tf.random_normal([8, 1, 8]), name="in0", dtype=tf.float32)
+in1 = tf.placeholder("float64", [16, 16], name="input_1")
+in2 = tf.placeholder("float64", [16, 16], name="input_2")
+k0 = tf.Variable(tf.random_normal([8, 1, 8],dtype=tf.float64), name="in0", dtype=tf.float64)
 my_feed_dict[in1] = get_input("input_1")
 my_feed_dict[in2] = get_input("input_2")
 

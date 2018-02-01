@@ -26,19 +26,19 @@ class self_coding_network(object):
         self.display_step = 1
         self.n_input = 676
         self.weights = {
-            'encoder_h1': tf.Variable(tf.random_normal([self.n_input, self.n_hidden_1])),
-            'encoder_h2': tf.Variable(tf.random_normal([self.n_hidden_1, self.n_hidden_2])),
-            'decoder_h1': tf.Variable(tf.random_normal([self.n_hidden_2, self.n_hidden_1])),
-            'decoder_h2': tf.Variable(tf.random_normal([self.n_hidden_1, self.n_input]))
+            'encoder_h1': tf.Variable(tf.random_normal([self.n_input, self.n_hidden_1], dtype=tf.float64)),
+            'encoder_h2': tf.Variable(tf.random_normal([self.n_hidden_1, self.n_hidden_2], dtype=tf.float64)),
+            'decoder_h1': tf.Variable(tf.random_normal([self.n_hidden_2, self.n_hidden_1], dtype=tf.float64)),
+            'decoder_h2': tf.Variable(tf.random_normal([self.n_hidden_1, self.n_input], dtype=tf.float64))
         }
         self.biases = {
-            'encoder_b1': tf.Variable(tf.random_normal([self.n_hidden_1])),
-            'encoder_b2': tf.Variable(tf.random_normal([self.n_hidden_2])),
-            'decoder_b1': tf.Variable(tf.random_normal([self.n_hidden_1])),
-            'decoder_b2': tf.Variable(tf.random_normal([self.n_input]))
+            'encoder_b1': tf.Variable(tf.random_normal([self.n_hidden_1], dtype=tf.float64)),
+            'encoder_b2': tf.Variable(tf.random_normal([self.n_hidden_2], dtype=tf.float64)),
+            'decoder_b1': tf.Variable(tf.random_normal([self.n_hidden_1], dtype=tf.float64)),
+            'decoder_b2': tf.Variable(tf.random_normal([self.n_input], dtype=tf.float64))
         }
 
-        self.X = tf.placeholder("float", [None, self.n_input], name='input')
+        self.X = tf.placeholder("float64", [None, self.n_input], name='input')
 
         # define model
         self.encoder_op = self.encoder(self.X)

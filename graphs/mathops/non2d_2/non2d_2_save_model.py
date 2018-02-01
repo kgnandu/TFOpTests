@@ -4,20 +4,20 @@ from helper import load_save_utils
 from graphs.mathops.non2d_2 import get_input, save_dir
 
 my_feed_dict = {}
-in0 = tf.placeholder("float", [1, 2], name="rank2dF")  # [1,2]
+in0 = tf.placeholder("float64", [1, 2], name="rank2dF")  # [1,2]
 my_feed_dict[in0] = get_input("rank2dF")
 
-in1 = tf.placeholder("float", [2, 1], name="rank2dB")
+in1 = tf.placeholder("float64", [2, 1], name="rank2dB")
 my_feed_dict[in1] = get_input("rank2dB")
 
-in2 = tf.placeholder("float", [1, 3, 2], name="rank3d")
+in2 = tf.placeholder("float64", [1, 3, 2], name="rank3d")
 my_feed_dict[in2] = get_input("rank3d")
 
-in3 = tf.placeholder("float", [3, 1, 2], name="rank3dB")
+in3 = tf.placeholder("float64", [3, 1, 2], name="rank3dB")
 my_feed_dict[in3] = get_input("rank3dB")
 
 i0 = tf.squeeze(in0)
-k0 = tf.Variable(get_input("rank2dB"), name="someweight", dtype=tf.float32)
+k0 = tf.Variable(get_input("rank2dB"), name="someweight", dtype=tf.float64)
 
 i1 = tf.stack([in0, tf.transpose(in1)])
 i2 = tf.multiply(i1, i0)  # how is this 2,1,2

@@ -5,11 +5,11 @@ from graphs.mathops.math_mul_order import get_input, save_dir
 from helper import load_save_utils
 
 my_feed_dict = {}
-in0 = tf.placeholder("float", [3, 3], name="input_0")
-in1 = tf.placeholder("float", [3, 3], name="input_1")
+in0 = tf.placeholder("float64", [3, 3], name="input_0")
+in1 = tf.placeholder("float64", [3, 3], name="input_1")
 my_feed_dict[in0] = get_input("input_0")
 my_feed_dict[in1] = get_input("input_1")
-k0 = tf.Variable(tf.random_normal([3, 3]), name="in0", dtype=tf.float32)
+k0 = tf.Variable(tf.random_normal([3, 3],dtype=tf.float64), name="in0", dtype=tf.float64)
 
 finish = tf.matmul(in0, in1, name="output")
 

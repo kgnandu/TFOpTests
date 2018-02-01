@@ -7,10 +7,10 @@ from helper import load_save_utils
 np.random.seed(13)
 
 my_feed_dict = {}
-in0 = tf.placeholder("float", [3, 3], name="input_0")
+in0 = tf.placeholder("float64", [3, 3], name="input_0")
 my_feed_dict[in0] = get_input("input_0")
 
-k0 = tf.Variable(tf.random_normal([3, 3]), name="k0", dtype=tf.float32)
+k0 = tf.Variable(tf.random_normal([3, 3],dtype=tf.float64), name="k0")
 in1 = tf.transpose(in0, name="input_1")
 finish = tf.add(in1, k0, name="output")
 

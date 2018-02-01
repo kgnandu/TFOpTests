@@ -142,8 +142,8 @@ tf.set_random_seed(13)
 def _GetNormOpTest(dtype_, shape_, ord_, axis_, keep_dims_, use_static_shape_, save_dir_):
     def _CompareNorm(matrix):
         # tf_matrix = tf.Variable(matrix,name="input")
-        tf_in = tf.placeholder("float", matrix.shape, name="input")
-        in0 = tf.Variable(tf.random_normal(matrix.shape, seed=13), name="in0", dtype=tf.float32)
+        tf_in = tf.placeholder("float64", matrix.shape, name="input")
+        in0 = tf.Variable(tf.zeros(matrix.shape, dtype=tf.float64), name="in0")
         tf_matrix = tf_in + in0
         tf_norm = linalg_ops.norm(
             tf_matrix, ord=ord_, axis=axis_, keep_dims=keep_dims_, name="norm_op")

@@ -6,16 +6,16 @@ from graphs.mlp.mlp_00 import get_input, num_input, n_hidden_1, num_classes, sav
 from helper import load_save_utils
 
 my_feed_dict = {}
-X = tf.placeholder("float", [None, num_input], name="input")
+X = tf.placeholder("float64", [None, num_input], name="input")
 my_feed_dict[X] = get_input("input")
 
 weights = {
-    'h1': tf.Variable(tf.random_normal([num_input, n_hidden_1]), name="l0W", dtype=tf.float32),
-    'out': tf.Variable(tf.random_normal([n_hidden_1, num_classes]), name="l1W", dtype=tf.float32)
+    'h1': tf.Variable(tf.random_normal([num_input, n_hidden_1], dtype=tf.float64), name="l0W"),
+    'out': tf.Variable(tf.random_normal([n_hidden_1, num_classes], dtype=tf.float64), name="l1W")
 }
 biases = {
-    'b1': tf.Variable(tf.random_normal([n_hidden_1]), name="l0B"),
-    'out': tf.Variable(tf.random_normal([num_classes]), name="l1B")
+    'b1': tf.Variable(tf.random_normal([n_hidden_1], dtype=tf.float64), name="l0B"),
+    'out': tf.Variable(tf.random_normal([num_classes], dtype=tf.float64), name="l1B")
 }
 
 

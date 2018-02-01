@@ -10,8 +10,8 @@ from helper import load_save_utils
 mnist = input_data.read_data_sets("/tmp/data/", one_hot=True)
 num_classes = 10
 # tf Graph input
-X = tf.placeholder("float", [None, timesteps, num_input], name="input")
-Y = tf.placeholder("float", [None, num_classes])
+X = tf.placeholder("float64", [None, timesteps, num_input], name="input")
+Y = tf.placeholder("float64", [None, num_classes])
 
 
 def lazy_property(function):
@@ -45,7 +45,7 @@ class SequenceClassification:
             cell = tf.contrib.rnn.GRUCell(self._num_hidden)  # Or LSTMCell(num_units)
             cells.append(cell)
         network = tf.contrib.rnn.MultiRNNCell(cells)
-        output, _ = tf.nn.dynamic_rnn(network, self.data, dtype=tf.float32)
+        output, _ = tf.nn.dynamic_rnn(network, self.data, dtype=tf.float64)
         # Select last output.
         output = tf.transpose(output, [1, 0, 2])
         last = tf.gather(output, int(output.get_shape()[0]) - 1)
@@ -74,8 +74,8 @@ class SequenceClassification:
 
     @staticmethod
     def _weight_and_bias(in_size, out_size):
-        weight = tf.truncated_normal([in_size, out_size], stddev=0.01)
-        bias = tf.constant(0.1, shape=[out_size])
+        weight = tf.truncated_normal([in_size, out_size], stddev=0.01,dtype=tf.float64)
+        bias = tf.constant(0.1, shape=[out_size],dtype=tf.float64)
         return tf.Variable(weight), tf.Variable(bias)
 
 

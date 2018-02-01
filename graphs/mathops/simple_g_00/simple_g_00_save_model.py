@@ -4,8 +4,8 @@ import tensorflow as tf
 from graphs.mathops.simple_g_00 import save_dir
 from helper import load_save_utils
 
-in0 = tf.Variable(tf.random_normal([3, 3]), name="in0", dtype=tf.float32)
-n0 = tf.add(np.arange(-4., 5., 1.).astype(np.float32).reshape(3, 3), in0)
+in0 = tf.Variable(tf.random_normal([3, 3],dtype=tf.float64), name="in0")
+n0 = tf.add(np.arange(-4., 5., 1.).astype(np.float64).reshape(3, 3), in0)
 n1 = tf.abs(n0)
 n2 = tf.rsqrt(n1)
 output = tf.tanh(n2, name="output")

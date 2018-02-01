@@ -8,10 +8,10 @@ from helper import load_save_utils
 
 # tf Graph input
 my_feed_dict = {}
-in_0 = tf.placeholder("float", [None, 4], name="input")
+in_0 = tf.placeholder("float64", [None, 4], name="input")
 my_feed_dict[in_0] = get_input("input")
 biases = tf.Variable(tf.lin_space(1.0, 4.0, 4), name="bias")
-output = tf.nn.bias_add(in_0, biases, name="output")
+output = tf.nn.bias_add(in_0, tf.cast(biases, dtype=tf.float64), name="output")
 
 init = tf.global_variables_initializer()
 all_saver = tf.train.Saver()

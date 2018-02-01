@@ -11,19 +11,20 @@ n_samp, n_input = get_input("input").shape
 n_hidden = 2
 
 my_feed_dict = {}
-x = tf.placeholder("float", [None, n_input], name="input")
+x = tf.placeholder("float64", [None, n_input], name="input")
 my_feed_dict[x] = get_input("input")
 # Weights and biases to hidden layer
-Wh = tf.Variable(tf.random_uniform((n_input, n_hidden), -1.0 / math.sqrt(n_input), 1.0 / math.sqrt(n_input)))
-bh = tf.Variable(tf.zeros([n_hidden]))
+Wh = tf.Variable(
+    tf.random_uniform((n_input, n_hidden), -1.0 / math.sqrt(n_input), 1.0 / math.sqrt(n_input), dtype=tf.float64))
+bh = tf.Variable(tf.zeros([n_hidden], dtype=tf.float64))
 h = tf.nn.tanh(tf.nn.bias_add(tf.matmul(x, Wh), bh))
 # Weights and biases to hidden layer
 Wo = tf.transpose(Wh)  # tied weights
 # Wo = tf.Variable(tf.random_uniform((n_hidden, n_input)))
-bo = tf.Variable(tf.zeros([n_input]))
+bo = tf.Variable(tf.zeros([n_input],dtype=tf.float64))
 y = tf.nn.tanh(tf.nn.bias_add(tf.matmul(h, Wo), bo), name="output")
 # Objective functions
-y_ = tf.placeholder("float", [None, n_input])
+y_ = tf.placeholder("float64", [None, n_input])
 meansq = tf.reduce_mean(tf.square(y_ - y))
 train_step = tf.train.GradientDescentOptimizer(0.05).minimize(meansq)
 
