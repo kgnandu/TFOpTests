@@ -9,9 +9,9 @@ in1 = tf.placeholder("float", [3, 3], name="input_1")
 my_feed_dict[in0] = get_input("input_0")
 my_feed_dict[in1] = get_input("input_1")
 
-c0 = tf.Variable(tf.constant(10.0, shape=[], name="addVal"))
-c1 = tf.Variable(tf.constant(2.0, shape=[], name="addVal"))
-c2 = tf.Variable(tf.constant(1.0, shape=[], name="addVal"))
+c0 = tf.Variable(tf.constant(10.0, shape=[], name="addVal0"))
+c1 = tf.Variable(tf.constant(2.0, shape=[], name="addVal1"))
+c2 = tf.Variable(tf.constant(1.0, shape=[], name="addVal2"))
 
 
 def outer_body_cond(x0, x1):
