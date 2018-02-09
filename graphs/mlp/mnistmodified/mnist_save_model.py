@@ -13,7 +13,7 @@ from tensorflow.examples.tutorials.mnist import input_data
 
 import tensorflow as tf
 
-from graphs.mlp.mnist_modified import get_input, save_dir
+from graphs.mlp.mnistmodified import get_input, save_dir
 from helper import load_save_utils
 
 FLAGS = None

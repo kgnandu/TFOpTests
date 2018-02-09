@@ -15,12 +15,6 @@ class BiasAdd(AbstractGraph):
         self.graph_placeholders = [in_node]
         self.graph_output_tensors = [out_node]
 
-    def list_inputs(self):
-        return ["input"]
-
-    def list_outputs(self):
-        return ["output"]
-
     def _get_input(self, name):
         np.random.seed(13)
         if name == "input":

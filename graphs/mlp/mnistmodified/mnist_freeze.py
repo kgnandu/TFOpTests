@@ -4,7 +4,7 @@ import sys
 import tempfile
 import tensorflow as tf
 
-from graphs.mlp.mnist_modified import save_dir, get_inputs
+from graphs.mlp.mnistmodified import save_dir, get_inputs
 from helper import load_save_utils
 
 

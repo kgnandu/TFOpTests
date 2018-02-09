@@ -90,37 +90,37 @@ def load_external_graph(model_file):
     return graph
 
 
-def save_intermediate_nodes(save_dir, input_dict):
+def save_intermediate_nodes(save_dir, input_dict, please_print=True):
     graph = load_frozen_graph(save_dir)
     placeholder_dict = {}
     for op in graph.get_operations():
         if op.type != "Placeholder":
             continue
         # there is a prefix and a suffix - there should only be one prefix with import
-        print op.name
+        if please_print: print op.name
         placeholder_name = "/".join(op.name.split("/")[1:])
-        print input_dict[placeholder_name]
+        if please_print: print input_dict[placeholder_name]
         placeholder_dict[op.name + ":0"] = input_dict[placeholder_name]
 
+    if please_print: print("-----------------------------------------------------")
     for op in graph.get_operations():
         if op.type == "Placeholder":
             continue
-        print("-----")
-        print op.name
-        print op.type
+        if please_print: print op.name
+        if please_print: print op.type
         output_num = 0
         for op_output in op.outputs:
-            print op_output.name
+            if please_print: print op_output.name
             with tf.Session(graph=graph) as sess:
                 try:
                     op_prediction = sess.run(op_output, feed_dict=placeholder_dict)
                     save_to = ".".join(["____".join(op_output.name.split("/")[1:]).split(":")[0], str(output_num)])
                     _save_intermediate(op_prediction, save_to, save_dir)
-                    print op_prediction
-                    print("-----")
+                    if please_print: print op_prediction
+                    if please_print: print("-----------------------------------------------------")
                 except:
-                    print("SKIPPING")
-                    print("-----")
+                    if please_print: print("SKIPPING")
+                    if please_print: print("-----------------------------------------------------")
             output_num += 1
 
 

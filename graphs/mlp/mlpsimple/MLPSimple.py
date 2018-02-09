@@ -3,7 +3,7 @@ from graphs._AbstractGraph import AbstractGraph
 import numpy as np
 import tensorflow as tf
 
-n_hidden_1 = 10  # 1st layer number of neurons
+n_hidden_1 = 10
 num_input = 5
 num_classes = 3
 mini_batch = 4
@@ -29,12 +29,6 @@ class MLPSimple(AbstractGraph):
         # Specify placeholders and output tensors
         self.graph_placeholders = [in_node]
         self.graph_output_tensors = [out_node]
-
-    def list_inputs(self):
-        return ["input"]
-
-    def list_outputs(self):
-        return ["output"]
 
     def _get_input(self, name):
         np.random.seed(13)
