@@ -4,10 +4,11 @@ import numpy as np
 model_name = "inception_v3_with_softmax"
 save_dir = model_name
 
+
 def get_input(name):
     np.random.seed(13)
     if name == "input":
-        input = np.random.uniform(-1,1,size=[1,299,299,3]) #fake image
+        input = np.random.uniform(-1, 1, size=[1, 299, 299, 3])  # fake image
         load_save_utils.save_input(input, name, save_dir)
         return input
 

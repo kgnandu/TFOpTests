@@ -1,10 +1,6 @@
 import tensorflow as tf
 import numpy as np
 
-'''
-http://mourafiq.com/2016/08/10/playing-with-convolutions-in-tensorflow.html
-'''
-
 
 class NNImageOps:
     def __init__(self, img):
