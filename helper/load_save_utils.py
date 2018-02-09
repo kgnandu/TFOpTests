@@ -100,6 +100,26 @@ def save_prediction(save_dir, output):
         np.savetxt(contentfile, np.ndarray.flatten(output), fmt="%10.8f")
 
 
+def save_predictions(save_dir, outputs):
+    for count, output in enumerate(outputs):
+        contentfile = None
+        shapefile = None
+        if count == 0:
+            contentfile = base_dir + "/" + save_dir + "/" + "output.prediction.csv"
+            shapefile = base_dir + "/" + save_dir + "/" + "output.prediction.shape"
+        else:
+            contentfile = base_dir + "/" + save_dir + "/" + "output." + str(count) + ".prediction.csv"
+            shapefile = base_dir + "/" + save_dir + "/" + "output." + str(count) + ".prediction.shape"
+        if np.isscalar(output):
+            np.savetxt(shapefile, np.asarray([0]), fmt="%i")
+            f = open(contentfile, 'w')
+            f.write('{}'.format(output))
+            f.close()
+        else:
+            np.savetxt(shapefile, np.asarray(output.shape), fmt="%i")
+            np.savetxt(contentfile, np.ndarray.flatten(output), fmt="%10.8f")
+
+
 def write_frozen_graph_txt(save_dir):
     graph_filename = base_dir + "/" + save_dir + "/frozen_model.pb"
     with tf.gfile.GFile(graph_filename, "rb") as f:

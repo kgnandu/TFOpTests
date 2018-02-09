@@ -12,8 +12,7 @@ if __name__ == '__main__':
         init = tf.global_variables_initializer()
         all_saver = tf.train.Saver()
         sess.run(init)
-        prediction = sess.run([result], feed_dict={})
+        prediction = sess.run(result, feed_dict={})
         load_save_utils.save_graph(sess, all_saver, save_dir)
         print prediction
-        for pred in prediction:
-            load_save_utils.save_prediction(save_dir, np.asarray(pred))
+        load_save_utils.save_predictions(save_dir,prediction)
