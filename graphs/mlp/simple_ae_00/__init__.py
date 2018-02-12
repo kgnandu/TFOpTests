@@ -1,9 +1,9 @@
 import numpy as np
 
-from helper import load_save_utils
+from helper.load_save_utils import TensorFlowPersistor, InputDictionary
 
-model_name = "ae_00"
-save_dir = model_name
+save_dir = "ae_00"
+PERSISTOR = TensorFlowPersistor(save_dir)
 
 my_input = np.array([[2.0, 1.0, 1.0, 2.0],
                      [-2.0, 1.0, -1.0, 2.0],
@@ -27,19 +27,20 @@ scaled_input_2 = (scaled_input_1 * 2) - 1
 scaled_output_2 = (scaled_output_1 * 2) - 1
 output_data = scaled_output_2
 
-def get_input(name):
-    input_data = scaled_input_2
-    if name == "input":
-        load_save_utils.save_input(input_data, "input", save_dir)
-        return input_data
 
+class AutoEncoderInput(InputDictionary):
 
-def list_inputs():
-    return ["input"]
+    def __init__(self):
+        self.output_data = output_data
 
+    def get_input(self, name):
+        input_data = scaled_input_2
+        if name == "input":
+            PERSISTOR.save_input(input_data, "input", save_dir)
+            return input_data
 
-def get_inputs():
-    my_input_dict = {}
-    for a_input in list_inputs():
-        my_input_dict[a_input] = get_input(a_input)
-    return my_input_dict
+    def __call__(self):
+        my_input_dict = {}
+        for a_input in self.list_inputs():
+            my_input_dict[a_input] = self.get_input(a_input)
+        return my_input_dict

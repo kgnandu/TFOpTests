@@ -3,16 +3,18 @@ import math
 import numpy as np
 import tensorflow as tf
 
-from graphs.mlp.simple_ae_00 import my_input, my_output, get_input, output_data, save_dir
-from helper import load_save_utils
+from graphs.mlp.simple_ae_00 import AutoEncoderInput, get_tf_persistor
+
+persistor = get_tf_persistor()
+inputs = AutoEncoderInput()
 
 # Autoencoder with 1 hidden layer
-n_samp, n_input = get_input("input").shape
+n_samp, n_input = inputs.get_input("input").shape
 n_hidden = 2
 
 my_feed_dict = {}
 x = tf.placeholder("float", [None, n_input], name="input")
-my_feed_dict[x] = get_input("input")
+my_feed_dict[x] = inputs.get_input("input")
 # Weights and biases to hidden layer
 Wh = tf.Variable(tf.random_uniform((n_input, n_hidden), -1.0 / math.sqrt(n_input), 1.0 / math.sqrt(n_input)))
 bh = tf.Variable(tf.zeros([n_hidden]))
@@ -43,9 +45,9 @@ with tf.Session() as sess:
     sess.run(init)
     for i in range(n_rounds):
         sample = np.random.randint(n_samp, size=batch_size)
-        batch_xs = get_input("input")[sample][:]
-        batch_ys = output_data[sample][:]
+        batch_xs = inputs.get_input("input")[sample][:]
+        batch_ys = inputs.output_data[sample][:]
         sess.run(train_step, feed_dict={x: batch_xs, y_: batch_ys})
     prediction = sess.run(y, feed_dict=my_feed_dict)
-    load_save_utils.save_graph(sess, all_saver, save_dir)
-    load_save_utils.save_prediction(save_dir, prediction)
+    persistor.save_graph(sess, all_saver)
+    persistor.save_prediction(prediction)

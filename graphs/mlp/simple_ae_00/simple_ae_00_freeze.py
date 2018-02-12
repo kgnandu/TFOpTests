@@ -1,6 +1,8 @@
-from graphs.mlp.simple_ae_00 import get_inputs, save_dir
-from helper import load_save_utils
+from graphs.mlp.simple_ae_00 import AutoEncoderInput, get_tf_persistor
 
-load_save_utils.freeze_n_save_graph(save_dir)
-load_save_utils.write_frozen_graph_txt(save_dir)
-load_save_utils.save_intermediate_nodes(save_dir,get_inputs())
+persistor = get_tf_persistor()
+inputs = AutoEncoderInput()
+
+persistor.freeze_n_save_graph()
+persistor.write_frozen_graph_txt()
+persistor.save_intermediate_nodes(inputs())
