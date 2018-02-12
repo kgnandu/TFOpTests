@@ -1,21 +1,22 @@
 from __future__ import print_function
-
 import tensorflow as tf
 
-from graphs.mlp.mlp_00 import get_input, num_input, n_hidden_1, num_classes, save_dir
-from helper import load_save_utils
+from graphs.mlp.mlp_00 import BaseMLPInput, get_tf_persistor
+
+persistor = get_tf_persistor()
+inputs = BaseMLPInput()
 
 my_feed_dict = {}
-X = tf.placeholder("float", [None, num_input], name="input")
-my_feed_dict[X] = get_input("input")
+X = tf.placeholder("float", [None, inputs.num_input], name="input")
+my_feed_dict[X] = inputs.get_input("input")
 
 weights = {
-    'h1': tf.Variable(tf.random_normal([num_input, n_hidden_1]), name="l0W", dtype=tf.float32),
-    'out': tf.Variable(tf.random_normal([n_hidden_1, num_classes]), name="l1W", dtype=tf.float32)
+    'h1': tf.Variable(tf.random_normal([inputs.num_input, inputs.n_hidden_1]), name="l0W", dtype=tf.float32),
+    'out': tf.Variable(tf.random_normal([inputs.n_hidden_1, inputs.num_classes]), name="l1W", dtype=tf.float32)
 }
 biases = {
-    'b1': tf.Variable(tf.random_normal([n_hidden_1]), name="l0B"),
-    'out': tf.Variable(tf.random_normal([num_classes]), name="l1B")
+    'b1': tf.Variable(tf.random_normal([inputs.n_hidden_1]), name="l0B"),
+    'out': tf.Variable(tf.random_normal([inputs.num_classes]), name="l1B")
 }
 
 
@@ -38,5 +39,5 @@ all_saver = tf.train.Saver()
 with tf.Session() as sess:
     sess.run(init)
     prediction = sess.run(output, feed_dict=my_feed_dict)
-    load_save_utils.save_graph(sess, all_saver, save_dir)
-    load_save_utils.save_prediction(save_dir, prediction)
+    persistor.save_graph(sess, all_saver)
+    persistor.save_prediction(prediction)
