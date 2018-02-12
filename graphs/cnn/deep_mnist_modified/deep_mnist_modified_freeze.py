@@ -1,19 +1,21 @@
 from tensorflow.examples.tutorials.mnist import input_data
 import argparse
 import sys
-import tempfile
 import tensorflow as tf
 
-from graphs.cnn.deep_mnist_modified import save_dir, get_inputs
-from helper import load_save_utils
+from graphs.cnn.deep_mnist_modified import DeepMnistModified, get_tf_persistor
+
+persistor = get_tf_persistor()
+inputs = DeepMnistModified()
 
 FLAGS = None
 
+
 def main(_):
     mnist = input_data.read_data_sets(FLAGS.data_dir, one_hot=True)
-    load_save_utils.freeze_n_save_graph(save_dir)
-    load_save_utils.write_frozen_graph_txt(save_dir)
-    load_save_utils.save_intermediate_nodes(save_dir, get_inputs(mnist))
+    persistor.freeze_n_save_graph()
+    persistor.write_frozen_graph_txt()
+    persistor.save_intermediate_nodes(inputs(mnist))
 
 
 if __name__ == '__main__':

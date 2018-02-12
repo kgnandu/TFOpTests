@@ -14,8 +14,10 @@ from tensorflow.examples.tutorials.mnist import input_data
 
 import tensorflow as tf
 
-from graphs.cnn.deep_mnist_modified import save_dir, get_input
-from helper import load_save_utils
+from graphs.cnn.deep_mnist_modified import DeepMnistModified, get_tf_persistor
+
+persistor = get_tf_persistor()
+inputs = DeepMnistModified()
 
 FLAGS = None
 
@@ -113,7 +115,7 @@ def main(_):
     # Create the model
     my_feed_dict = {}
     x = tf.placeholder(tf.float32, [None, 784], name="input")
-    my_feed_dict[x] = get_input("input", mnist)
+    my_feed_dict[x] = inputs.get_input("input", mnist)
 
     # Define loss and optimizer
     y_ = tf.placeholder(tf.float32, [None, 10])
@@ -156,8 +158,8 @@ def main(_):
             x: mnist.test.images, y_: mnist.test.labels}))
 
         prediction = sess.run(softmax_out, feed_dict=my_feed_dict)
-        load_save_utils.save_graph(sess, all_saver, save_dir)
-        load_save_utils.save_prediction(save_dir, prediction)
+        persistor.save_graph(sess, all_saver)
+        persistor.save_prediction(prediction)
 
 
 if __name__ == '__main__':
