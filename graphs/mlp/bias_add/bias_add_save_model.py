@@ -1,10 +1,10 @@
 from __future__ import print_function
 
-import numpy as np
 import tensorflow as tf
 
-from graphs.mlp.bias_add import save_dir, get_input
-from helper import load_save_utils
+from graphs.mlp.bias_add import get_input, get_tf_persistor
+
+persistor = get_tf_persistor()
 
 # tf Graph input
 my_feed_dict = {}
@@ -19,5 +19,5 @@ all_saver = tf.train.Saver()
 with tf.Session() as sess:
     sess.run(init)
     prediction = sess.run(output, feed_dict=my_feed_dict)
-    load_save_utils.save_prediction(save_dir, prediction)
-    load_save_utils.save_graph(sess, all_saver, save_dir)
+    persistor.save_prediction(prediction)
+    persistor.save_graph(sess, all_saver)

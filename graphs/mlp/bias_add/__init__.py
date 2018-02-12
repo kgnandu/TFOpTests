@@ -1,23 +1,25 @@
-from helper import load_save_utils
+from helper.load_save_utils import TensorFlowPersistor, InputDictionary
 import numpy as np
 
-model_name = "bias_add"
-save_dir = model_name
+np.random.seed(13)
+save_dir = "bias_add"
+PERSISTOR = TensorFlowPersistor(save_dir)
 
 
-def get_input(name):
-    np.random.seed(13)
-    if name == "input":
-        input_0 = np.linspace(1, 40, 40).reshape(10, 4)
-        load_save_utils.save_input(input_0, "input", save_dir)
-        return input_0
+def get_tf_persistor():
+    return PERSISTOR
 
 
-def list_inputs():
-    return ["input"]
+class BiasAddInput(InputDictionary):
 
-def get_inputs():
-    my_input_dict = {}
-    for a_input in list_inputs():
-        my_input_dict[a_input] = get_input(a_input)
-    return my_input_dict
+    def get_input(self, name):
+        if name == "input":
+            input_0 = np.linspace(1, 40, 40).reshape(10, 4)
+            PERSISTOR.save_input(input_0, "input")
+            return input_0
+
+    def __call__(self):
+        my_input_dict = {}
+        for a_input in self.list_inputs():
+            my_input_dict[a_input] = self.get_input(a_input)
+        return my_input_dict
