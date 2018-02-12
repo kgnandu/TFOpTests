@@ -1,7 +1,7 @@
 import numpy as np
 import tensorflow as tf
 
-from graphs.mathops.non2d_1 import get_input
+from helper import load_save_utils
 
 
 def load_graph(model_file):
@@ -16,21 +16,13 @@ def load_graph(model_file):
     return graph
 
 
-model_file = '/Users/susaneraly/Desktop/darkflow/built_graph/yolo.pb'
+model_file = '/Users/susaneraly/SKYMIND/nd4j/nd4j-backends/nd4j-tests/src/test/resources/tf_graphs/examples/conv_0/frozen_model.pb'
 graph = load_graph(model_file)
 for op in graph.get_operations():
-    #print (op.name)
-    if op.type == "Placeholder":
-        print (op.name)
-        print("is placeholder")
-
-
-with tf.gfile.GFile(model_file, "rb") as f:
-    graph_def = tf.GraphDef()
-    graph_def.ParseFromString(f.read())
-    #tf.train.write_graph(graph_def, '/Users/susaneraly/Desktop/darkflow/built_graph/','frozen_graph.pbtxt', True)
+    print(op.name)
 
 '''
+n = graph.get_operation_by_name('import/output')
 #a = graph.get_tensor_by_name('import/conv2d0_w:0')
 # = graph.get_tensor_by_name('import/conv2d2_b:0')
 
@@ -41,11 +33,13 @@ print(n.get_attr('value'))
 print "===="
 '''
 
-x = graph.get_tensor_by_name('import/input:0')
+x = graph.get_tensor_by_name('import/input_0:0')
 y = graph.get_tensor_by_name('import/output:0')
 with tf.Session(graph=graph) as sess:
+    np.random.seed(13)
+    imsize = [4, 28, 28, 3]
+    input_0 = np.random.uniform(size=imsize)
     # Note: we don't nee to initialize/restore anything
     # There is no Variables in this graph, only hardcoded constants
-    prediction = sess.run(y, feed_dict={x: np.random.random((1,608,608,3))})
-    print(prediction)
-    print(prediction.shape)
+    prediction = sess.run(y, feed_dict={x: input_0})
+    load_save_utils.save_prediction("/Users/susaneraly/", prediction)

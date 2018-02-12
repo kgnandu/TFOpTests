@@ -14,7 +14,7 @@ with tf.Session(graph=tf.Graph()) as sess:
     meta_graph_def = tf.saved_model.loader.load(sess, [tag_constants.SERVING], save_dir)
     # print meta_graph_def
     signature = meta_graph_def.signature_def
-    print signature
+    print(signature)
 
     input_tensor_name = signature[tf.saved_model.signature_constants.DEFAULT_SERVING_SIGNATURE_DEF_KEY].inputs[
         input_key].name
@@ -25,7 +25,7 @@ with tf.Session(graph=tf.Graph()) as sess:
     output_tensor = sess.graph.get_tensor_by_name(output_tensor_name)
 
     prediction = sess.run(output_tensor, feed_dict={input_tensor: input_0})
-    print prediction
+    print(prediction)
 
     input_graph_filename = "/Users/susaneraly/SKYMIND/nd4j/nd4j-backends/nd4j-tests/src/test/resources/tf_graphs/examples/bias_add_test/saved_model.pb"
     output_graph_filename = "/Users/susaneraly/SKYMIND/nd4j/nd4j-backends/nd4j-tests/src/test/resources/tf_graphs/examples/bias_add_test/frozen_model.pb"

@@ -1,3 +1,4 @@
+from __future__ import print_function
 import numpy as np
 import tensorflow as tf
 
@@ -19,14 +20,14 @@ all_saver = tf.train.Saver()
 with tf.Session() as sess:
     np.random.seed(42)
     input_0 = np.random.uniform(size=imsize)
-    print input_0
+    print(input_0)
     # This writes input as csv so I can read into nd4j
     load_save_utils.save_input(input_0, "input_0", save_dir)  # change this to take a list of inputs for later...
 
     sess.run(init)
     prediction = sess.run(finish, feed_dict={in0: input_0})
-    print prediction
-    print prediction.shape
+    print(prediction)
+    print(prediction.shape)
     tf.train.write_graph(sess.graph_def, "/Users/susaneraly/", "mymodel_2.txt", True)
     # All the below is to save the graph and variables etc to pb
     load_save_utils.save_graph(sess, all_saver, save_dir)

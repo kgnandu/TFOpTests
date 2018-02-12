@@ -1,5 +1,6 @@
-import numpy as np
+from __future__ import print_function
 import tensorflow as tf
+
 
 def load_graph(model_file):
     graph = tf.Graph()
@@ -16,7 +17,7 @@ def load_graph(model_file):
 model_file = "/Users/susaneraly/SKYMIND/nd4j/nd4j-backends/nd4j-tests/src/test/resources/tf_graphs/tensorflow_inception_graph.pb"
 graph = load_graph(model_file)
 for op in graph.get_operations():
-    print (op.name)
+    print(op.name)
 
 
 n = graph.get_operation_by_name('import/conv2d0_w')
@@ -27,4 +28,4 @@ print("====")
 print(a)
 print(b)
 print(n.get_attr('value'))
-print "===="
+print("====")

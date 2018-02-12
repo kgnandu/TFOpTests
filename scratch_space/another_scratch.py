@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 import tensorflow as tf
 import numpy as np
 
@@ -11,4 +13,4 @@ with tf.Session() as sess:
     input_0 = np.linspace(1, 40, 40).reshape(10, 4)
     sess.run(init)
     prediction = sess.run(output, feed_dict={in_0: input_0})
-    print prediction
+    print(prediction)
