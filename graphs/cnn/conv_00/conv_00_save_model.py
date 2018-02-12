@@ -1,13 +1,14 @@
-import numpy as np
 import tensorflow as tf
 
-from graphs.cnn.conv_00 import get_input, save_dir, imsize
-from helper import load_save_utils
+from graphs.mlp.bias_add import BaseCNNInput, get_tf_persistor
 from helper.nn_image_ops import NNImageOps
 
+persistor = get_tf_persistor()
+input = BaseCNNInput()
+
 my_feed_dict = {}
-in0 = tf.placeholder("float", imsize, name="input_0")
-my_feed_dict[in0] = get_input("input_0")
+in0 = tf.placeholder("float", input.imsize, name="input_0")
+my_feed_dict[in0] = input.get_input("input_0")
 
 constr = NNImageOps(in0)
 
@@ -37,5 +38,5 @@ all_saver = tf.train.Saver()
 with tf.Session() as sess:
     sess.run(init)
     prediction = sess.run(finish, feed_dict=my_feed_dict)
-    load_save_utils.save_graph(sess, all_saver, save_dir)
-    load_save_utils.save_prediction(save_dir, prediction)
+    persistor.save_graph(sess, all_saver)
+    persistor.save_prediction(prediction)
