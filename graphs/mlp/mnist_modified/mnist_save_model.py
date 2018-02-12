@@ -13,8 +13,10 @@ from tensorflow.examples.tutorials.mnist import input_data
 
 import tensorflow as tf
 
-from graphs.mlp.mnist_modified import get_input, save_dir
-from helper import load_save_utils
+from graphs.mlp.mnist_modified import ModifiedMnistInput, get_tf_persistor
+
+persistor = get_tf_persistor()
+inputs = ModifiedMnistInput()
 
 FLAGS = None
 
@@ -26,10 +28,10 @@ def main(_):
     # Create the model
     my_feed_dict = {}
     x = tf.placeholder(tf.float32, [None, 784], name='input')
-    my_feed_dict[x] = get_input("input", mnist)
+    my_feed_dict[x] = inputs.get_input("input", mnist)
     W = tf.Variable(tf.zeros([784, 10]))
     b = tf.Variable(tf.zeros([10]))
-    y = tf.nn.bias_add(tf.matmul(x, W),b)
+    y = tf.nn.bias_add(tf.matmul(x, W), b)
 
     # Define loss and optimizer
     y_ = tf.placeholder(tf.float32, [None, 10])
@@ -44,8 +46,8 @@ def main(_):
     # So here we use tf.nn.softmax_cross_entropy_with_logits on the raw
     # outputs of 'y', and then average across the batch.
 
-    ## Most people are going to use softmax_cross_entropy_with_logits but this will be an issue for us
-    ## since we want the call to be separate from the loss fn
+    # Most people are going to use softmax_cross_entropy_with_logits but this will be an issue for us
+    # since we want the call to be separate from the loss fn
     softmax_out = tf.nn.softmax(y, name="output")
     cross_entropy_mean = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=y_, logits=y))
     train_step = tf.train.GradientDescentOptimizer(0.5).minimize(cross_entropy_mean)
@@ -64,8 +66,8 @@ def main(_):
 
     # Write out test predictions
     prediction = sess.run(softmax_out, feed_dict=my_feed_dict)
-    load_save_utils.save_prediction(save_dir, prediction)
-    load_save_utils.save_graph(sess, all_saver, save_dir)
+    persistor.save_prediction(prediction)
+    persistor.save_graph(sess, all_saver)
 
     print(sess.run(accuracy, feed_dict={x: mnist.test.images,
                                         y_: mnist.test.labels}))
