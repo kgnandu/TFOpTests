@@ -3,16 +3,18 @@ import sys
 
 import tensorflow as tf
 
-from graphs.rnn.lstm_mnist import save_dir, get_inputs
+from graphs.rnn.lstm_mnist import get_tf_persistor, MnistLstmInput
 from tensorflow.examples.tutorials.mnist import input_data
-from helper import load_save_utils
+
+persistor = get_tf_persistor()
+inputs = MnistLstmInput()
 
 
 def main(_):
     mnist = input_data.read_data_sets(FLAGS.data_dir, one_hot=True)
-    load_save_utils.freeze_n_save_graph(save_dir)
-    load_save_utils.write_frozen_graph_txt(save_dir)
-    load_save_utils.save_intermediate_nodes(save_dir, get_inputs(mnist))
+    persistor.freeze_n_save_graph()
+    persistor.write_frozen_graph_txt()
+    persistor.save_intermediate_nodes(inputs(mnist))
 
 
 if __name__ == '__main__':

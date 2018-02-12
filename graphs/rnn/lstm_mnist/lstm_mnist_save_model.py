@@ -16,8 +16,10 @@ from tensorflow.contrib import rnn
 # Import MNIST data
 from tensorflow.examples.tutorials.mnist import input_data
 
-from graphs.rnn.lstm_mnist import save_dir, get_input, timesteps, num_input
-from helper import load_save_utils
+from graphs.rnn.lstm_mnist import get_tf_persistor, MnistLstmInput
+
+persistor = get_tf_persistor()
+inputs = MnistLstmInput()
 
 mnist = input_data.read_data_sets("/tmp/data/", one_hot=True)
 
@@ -38,7 +40,7 @@ num_hidden = 128  # hidden layer num of features
 num_classes = 10  # MNIST total classes (0-9 digits)
 
 # tf Graph input
-X = tf.placeholder("float", [None, timesteps, num_input],name="input")
+X = tf.placeholder("float", [None, input.timesteps, input.num_input], name="input")
 Y = tf.placeholder("float", [None, num_classes])
 
 # Define weights
@@ -56,7 +58,7 @@ def RNN(x, weights, biases):
     # Required shape: 'timesteps' tensors list of shape (batch_size, n_input)
 
     # Unstack to get a list of 'timesteps' tensors of shape (batch_size, n_input)
-    x = tf.unstack(x, timesteps, 1)
+    x = tf.unstack(x, input.timesteps, 1)
 
     # Define a lstm cell with tensorflow
     lstm_cell = rnn.BasicLSTMCell(num_hidden, forget_bias=1.0)
@@ -93,26 +95,26 @@ with tf.Session() as sess:
     for step in range(1, training_steps + 1):
         batch_x, batch_y = mnist.train.next_batch(batch_size)
         # Reshape data to get 28 seq of 28 elements
-        batch_x = batch_x.reshape((batch_size, timesteps, num_input))
+        batch_x = batch_x.reshape((batch_size, input.timesteps, input.num_input))
         # Run optimization op (backprop)
         sess.run(train_op, feed_dict={X: batch_x, Y: batch_y})
         if step % display_step == 0 or step == 1:
             # Calculate batch loss and accuracy
             loss, acc = sess.run([loss_op, accuracy], feed_dict={X: batch_x,
                                                                  Y: batch_y})
-            print("Step " + str(step) + ", Minibatch Loss= " + \
-                  "{:.4f}".format(loss) + ", Training Accuracy= " + \
+            print("Step " + str(step) + ", Minibatch Loss= " +
+                  "{:.4f}".format(loss) + ", Training Accuracy= " +
                   "{:.3f}".format(acc))
 
     print("Optimization Finished!")
 
-    prediction = sess.run(output, feed_dict={X: get_input("input",mnist)})
-    load_save_utils.save_prediction(save_dir, prediction)
-    load_save_utils.save_graph(sess, all_saver, save_dir)
+    prediction = sess.run(output, feed_dict={X: input.get_input("input", mnist)})
+    persistor.save_prediction(prediction)
+    persistor.save_graph(sess, all_saver)
 
     # Calculate accuracy for 128 mnist test images
     test_len = 128
-    test_data = mnist.test.images[:test_len].reshape((-1, timesteps, num_input))
+    test_data = mnist.test.images[:test_len].reshape((-1, input.timesteps, input.num_input))
     test_label = mnist.test.labels[:test_len]
-    print("Testing Accuracy:", \
+    print("Testing Accuracy:",
           sess.run(accuracy, feed_dict={X: test_data, Y: test_label}))
