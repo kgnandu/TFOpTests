@@ -1,4 +1,4 @@
-from helper.load_save_utils import TensorFlowPersistor, InputDictionary
+from helper.load_save_utils import TensorFlowPersistor
 import numpy as np
 
 save_dir = "deep_mnist_no_dropout"
@@ -9,7 +9,7 @@ def get_tf_persistor():
     return PERSISTOR
 
 
-class DeepMnistModified(InputDictionary):
+class DeepMnistModified(TensorFlowPersistor):
 
     def get_input(self, name, mnist):
         np.random.seed(13)

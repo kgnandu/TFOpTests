@@ -1,5 +1,5 @@
 import numpy as np
-from helper.load_save_utils import TensorFlowPersistor, InputDictionary
+from helper.load_save_utils import TensorFlowPersistor
 
 save_dir = "primitive_lstm"
 PERSISTOR = TensorFlowPersistor(save_dir)
@@ -24,7 +24,7 @@ def get_tf_persistor():
     return PERSISTOR
 
 
-class SimpleLstmInput(InputDictionary):
+class SimpleLstmInput(TensorFlowPersistor):
 
     def __init__(self):
         self.featuresize = featuresize

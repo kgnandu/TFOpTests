@@ -1,4 +1,4 @@
-from helper.load_save_utils import TensorFlowPersistor, InputDictionary
+from helper.load_save_utils import TensorFlowPersistor
 import numpy as np
 
 np.random.seed(13)
@@ -10,7 +10,7 @@ def get_tf_persistor():
     return PERSISTOR
 
 
-class BiasAddInput(InputDictionary):
+class BiasAddInput(TensorFlowPersistor):
 
     def get_input(self, name):
         if name == "input":

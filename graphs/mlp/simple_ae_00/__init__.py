@@ -1,6 +1,6 @@
 import numpy as np
 
-from helper.load_save_utils import TensorFlowPersistor, InputDictionary
+from helper.load_save_utils import TensorFlowPersistor
 
 save_dir = "ae_00"
 PERSISTOR = TensorFlowPersistor(save_dir)
@@ -28,7 +28,7 @@ scaled_output_2 = (scaled_output_1 * 2) - 1
 output_data = scaled_output_2
 
 
-class AutoEncoderInput(InputDictionary):
+class AutoEncoderInput(TensorFlowPersistor):
 
     def __init__(self):
         self.output_data = output_data

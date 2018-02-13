@@ -1,4 +1,4 @@
-from helper.load_save_utils import TensorFlowPersistor, InputDictionary
+from helper.load_save_utils import TensorFlowPersistor
 import numpy as np
 
 save_dir = "conv_0"
@@ -11,7 +11,7 @@ def get_tf_persistor():
     return PERSISTOR
 
 
-class BaseCNNInput(InputDictionary):
+class BaseCNNInput(TensorFlowPersistor):
 
     def __init__(self):
         self.imsize = imsize

@@ -1,4 +1,4 @@
-from helper.load_save_utils import TensorFlowPersistor, InputDictionary
+from helper.load_save_utils import TensorFlowPersistor
 import numpy as np
 
 save_dir = "lstm_mnist"
@@ -12,7 +12,7 @@ def get_tf_persistor():
     return PERSISTOR
 
 
-class MnistLstmInput(InputDictionary):
+class MnistLstmInput(TensorFlowPersistor):
 
     def __init__(self):
         self.num_input = num_input
