@@ -1,9 +1,6 @@
 import errno
 import numpy as np
-from tensorflow.python.framework import constant_op
-from tensorflow.python.ops import array_ops
 from tensorflow.python.ops import linalg_ops
-import sys
 import os
 
 from tests.mathops.norm_00 import save_dir
@@ -176,8 +173,10 @@ def _GetNormOpTest(dtype_, shape_, ord_, axis_, keep_dims_, use_static_shape_, s
             print("==========================================================")
             return
         matrix = np.random.randn(*shape_).astype(dtype_)
-        test_info = "/Users/susaneraly/SKYMIND/dl4j-test-resources/src/main/resources/tf_graphs/examples/" + save_dir_i_ + "/test.info"
-        print "writing to...",
+        # TODO: Remove Susan's path.
+        test_info = "/Users/susaneraly/SKYMIND/dl4j-test-resources/src/main/resources/tf_graphs/examples/" + \
+            save_dir_i_ + "/test.info"
+        print("writing to...")
         print(test_info)
         if not os.path.exists(os.path.dirname(test_info)):
             try:
@@ -185,8 +184,8 @@ def _GetNormOpTest(dtype_, shape_, ord_, axis_, keep_dims_, use_static_shape_, s
             except OSError as exc:  # Guard against race condition
                 if exc.errno != errno.EEXIST:
                     raise
-        print "matrix dims",
-        print matrix.shape
+        print("matrix dims")
+        print(matrix.shape)
         with open(test_info, "w") as f:
             f.write("ord ")
             f.write(str(ord_))
@@ -207,27 +206,27 @@ def _GetNormOpTest(dtype_, shape_, ord_, axis_, keep_dims_, use_static_shape_, s
 use_static_shape = False
 dtype = np.float32
 test_num = 0
-#for rows in 2, 5:
+# for rows in 2, 5:
 for rows in [2]:
-    #for cols in 2, 5:
+    # for cols in 2, 5:
     for cols in [5]:
-        #for batch in [], [2], [2, 3]:
+        # for batch in [], [2], [2, 3]:
         for batch in [[]]:
             shape = batch + [rows, cols]
             for ord in "euclidean", "fro", 0.5, 1, 2, np.inf:
-                #for axis in [None, (-2, -1), (-1, -2), -len(shape), 0, len(shape) - 1]:
+                # for axis in [None, (-2, -1), (-1, -2), -len(shape), 0, len(shape) - 1]:
                 for axis in [None, (-2, -1)]:
-                    #for keep_dims in False, True:
+                    # for keep_dims in False, True:
                     for keep_dims in [False]:
                         name = "%s_ord_%s_axis_%s_%s" % (
                             "_".join(map(str, shape)), ord, axis,
                             keep_dims)
                         if name not in ["2_2_ord_0.5_axis_None_False",
                                         "2_2_ord_0.5_axis_None_True"]:
-                            print name
+                            print(name)
                             save_dir_i = save_dir + "/" + "norm_" + str(test_num)
                             something = _GetNormOpTest(dtype, shape, ord, axis, keep_dims,
                                                        use_static_shape, save_dir_i)
                             something(save_dir_i)
                             test_num += 1
-print "ALL DONE"
+print("ALL DONE")
