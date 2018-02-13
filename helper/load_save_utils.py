@@ -40,7 +40,6 @@ class TensorFlowPersistor():
         '''Get input tensor shape for given node name'''
         raise NotImplementedError
 
-
     @property
     def graph_placeholders(self):
         '''
@@ -202,6 +201,8 @@ class TensorFlowPersistor():
             input_value = self._get_input(input_name)
             placeholder_feed_dict[input_tensor] = input_value
             placeholder_name_value_dict[input_name] = input_value
+            print("FOO")
+            print(input_value)
             self.save_input(input_value, input_name)
         return [placeholder_feed_dict, placeholder_name_value_dict]
 

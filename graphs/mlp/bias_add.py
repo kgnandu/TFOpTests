@@ -5,7 +5,6 @@ from helper.load_save_utils import TensorFlowPersistor
 
 class BiasAdd(TensorFlowPersistor):
     def _get_input(self, name):
-        np.random.seed(13)
         if name == "input":
             input_0 = np.linspace(1, 40, 40).reshape(10, 4)
             return input_0
