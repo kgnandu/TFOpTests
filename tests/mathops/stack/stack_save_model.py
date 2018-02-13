@@ -5,7 +5,7 @@ import json
 import random
 import numpy as np
 import tensorflow as tf
-from tfoptests import load_save_utils
+from tfoptests import persistor
 from . import save_dir
 
 
@@ -23,6 +23,6 @@ if __name__ == '__main__':
         all_saver = tf.train.Saver()
         sess.run(init)
         prediction = np.reshape(np.asarray(sess.run([result],feed_dict={})),result.shape)
-        load_save_utils.save_graph(sess, all_saver, save_dir)
-        load_save_utils.save_prediction(save_dir, prediction)
+        persistor.save_graph(sess, all_saver, save_dir)
+        persistor.save_prediction(save_dir, prediction)
 

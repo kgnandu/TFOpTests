@@ -1,6 +1,6 @@
 import tensorflow as tf
 from tests.mathops.another_g_01 import get_input, save_dir
-from tfoptests import load_save_utils
+from tfoptests import persistor
 
 my_feed_dict = {}
 in1 = tf.placeholder("float", [16, 16], name="input_1")
@@ -24,5 +24,5 @@ all_saver = tf.train.Saver()
 with tf.Session() as sess:
     sess.run(init)
     prediction = sess.run(final, feed_dict=my_feed_dict)
-    load_save_utils.save_graph(sess, all_saver, save_dir)
-    load_save_utils.save_prediction(save_dir, prediction)
+    persistor.save_graph(sess, all_saver, save_dir)
+    persistor.save_prediction(save_dir, prediction)

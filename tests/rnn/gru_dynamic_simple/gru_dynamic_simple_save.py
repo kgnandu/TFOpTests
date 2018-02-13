@@ -1,7 +1,7 @@
 import tensorflow as tf
 from tests.rnn.gru_dynamic_simple import featuresize, timesteps, minibatch, get_input, get_output, save_dir
 
-from tfoptests import load_save_utils
+from tfoptests import persistor
 
 num_hidden = 3
 num_layers = 5
@@ -70,5 +70,5 @@ with tf.Session() as sess:
     print(get_output("output"))
     print("====")
     print(prediction)
-    load_save_utils.save_prediction(save_dir, prediction)
-    load_save_utils.save_graph(sess, all_saver, save_dir)
+    persistor.save_prediction(save_dir, prediction)
+    persistor.save_graph(sess, all_saver, save_dir)

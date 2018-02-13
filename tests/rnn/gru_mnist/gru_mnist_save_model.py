@@ -7,7 +7,7 @@ from tensorflow.contrib import rnn
 from tensorflow.examples.tutorials.mnist import input_data
 
 from tests.rnn.gru_mnist import timesteps, num_input, get_input, save_dir
-from tfoptests import load_save_utils
+from tfoptests import persistor
 
 mnist = input_data.read_data_sets("/tmp/data/", one_hot=True)
 
@@ -97,8 +97,8 @@ with tf.Session() as sess:
     print("Optimization Finished!")
 
     prediction = sess.run(output, feed_dict={X: get_input("input",mnist)})
-    load_save_utils.save_prediction(save_dir, prediction)
-    load_save_utils.save_graph(sess, all_saver, save_dir)
+    persistor.save_prediction(save_dir, prediction)
+    persistor.save_graph(sess, all_saver, save_dir)
 
     # Calculate accuracy for 128 mnist test images
     test_len = 128

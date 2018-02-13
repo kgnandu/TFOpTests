@@ -1,6 +1,6 @@
 import numpy as np
 
-from tfoptests.load_save_utils import TensorFlowPersistor
+from tfoptests.persistor import TensorFlowPersistor
 
 save_dir = "mnist_00"
 PERSISTOR = TensorFlowPersistor(save_dir)

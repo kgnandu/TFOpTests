@@ -4,7 +4,7 @@ from tensorflow.python.ops import linalg_ops
 import os
 
 from tests.mathops.norm_00 import save_dir
-from tfoptests import load_save_utils
+from tfoptests import persistor
 
 '''
 import numpy as np
@@ -152,12 +152,12 @@ def _GetNormOpTest(dtype_, shape_, ord_, axis_, keep_dims_, use_static_shape_, s
             #    tf_norm_val = sess.run(tf_norm)
             # else:
             prediction = sess.run(output, feed_dict={tf_matrix: matrix})
-            load_save_utils.save_input(matrix, "input", save_dir_)
-            load_save_utils.save_graph(sess, all_saver, save_dir_)
-            load_save_utils.save_prediction(save_dir_, prediction)
-        load_save_utils.freeze_n_save_graph(save_dir_)
-        load_save_utils.write_frozen_graph_txt(save_dir_)
-        load_save_utils.save_intermediate_nodes(save_dir_, {"input": matrix})
+            persistor.save_input(matrix, "input", save_dir_)
+            persistor.save_graph(sess, all_saver, save_dir_)
+            persistor.save_prediction(save_dir_, prediction)
+        persistor.freeze_n_save_graph(save_dir_)
+        persistor.write_frozen_graph_txt(save_dir_)
+        persistor.save_intermediate_nodes(save_dir_, {"input": matrix})
 
     def Test(save_dir_i_):
         is_matrix_norm = (isinstance(axis_, tuple) or

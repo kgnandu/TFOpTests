@@ -1,6 +1,6 @@
 import numpy as np
 
-from tfoptests.load_save_utils import TensorFlowPersistor
+from tfoptests.persistor import TensorFlowPersistor
 
 save_dir = "mlp_00"
 n_hidden_1 = 10  # number of neurons in first layer

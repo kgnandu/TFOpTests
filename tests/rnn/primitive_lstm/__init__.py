@@ -1,5 +1,5 @@
 import numpy as np
-from tfoptests.load_save_utils import TensorFlowPersistor
+from tfoptests.persistor import TensorFlowPersistor
 
 save_dir = "primitive_lstm"
 PERSISTOR = TensorFlowPersistor(save_dir)

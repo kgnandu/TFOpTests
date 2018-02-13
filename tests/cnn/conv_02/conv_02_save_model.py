@@ -1,6 +1,6 @@
 import tensorflow as tf
 from tests.cnn.conv_02 import save_dir, imsize, get_input
-from tfoptests import load_save_utils
+from tfoptests import persistor
 
 my_feed_dict = {}
 in0 = tf.placeholder("float", imsize, name="input_0")
@@ -36,5 +36,5 @@ with tf.Session() as sess:
     sess.run(init)
     prediction = sess.run(finish, feed_dict=my_feed_dict)
     print (prediction.shape)
-    load_save_utils.save_graph(sess, all_saver, save_dir)
-    load_save_utils.save_prediction(save_dir, prediction)
+    persistor.save_graph(sess, all_saver, save_dir)
+    persistor.save_prediction(save_dir, prediction)

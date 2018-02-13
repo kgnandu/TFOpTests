@@ -1,4 +1,4 @@
-from tfoptests import load_save_utils
+from tfoptests import persistor
 import numpy as np
 
 model_name = "math_mul_order"
@@ -9,11 +9,11 @@ def get_input(name):
     np.random.seed(13)
     if name == "input_0":
         input_0 = np.random.uniform(size=(3, 3))
-        load_save_utils.save_input(input_0, name, save_dir)
+        persistor.save_input(input_0, name, save_dir)
         return input_0
     if name == "input_1":
         input_1 = np.random.uniform(size=(3, 3)) + np.random.uniform(size=(3, 3))
-        load_save_utils.save_input(input_1, name, save_dir)
+        persistor.save_input(input_1, name, save_dir)
         return input_1
 
 

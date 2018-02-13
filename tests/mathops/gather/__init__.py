@@ -1,6 +1,6 @@
 import numpy as np
 
-from tfoptests import load_save_utils
+from tfoptests import persistor
 
 model_name = "g_05"
 save_dir = model_name
@@ -10,11 +10,11 @@ def get_input(name):
     np.random.seed(19)
     if name == "input_1":
         input_1 = np.random.uniform(size=(2,4,3,2))
-        load_save_utils.save_input(input_1, name, save_dir)
+        persistor.save_input(input_1, name, save_dir)
         return input_1
     if name == "input_2":
         input_2 = np.random.uniform(size=(3, 2))
-        load_save_utils.save_input(input_2, name, save_dir)
+        persistor.save_input(input_2, name, save_dir)
         return input_2
 
 

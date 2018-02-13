@@ -1,6 +1,6 @@
 import numpy as np
 import tensorflow as tf
-from tfoptests.load_save_utils import TensorFlowPersistor
+from tfoptests.persistor import TensorFlowPersistor
 
 n_hidden_1 = 10
 num_input = 5
@@ -37,6 +37,9 @@ def neural_net(input):
     layer_1_post_actv = tf.abs(layer_1, name="l0Out")
     out_layer = tf.nn.bias_add(tf.matmul(layer_1_post_actv, weights['out']), biases['out'], name="l1PreOut")
     return out_layer
+
+# TODO: fix this
+# TODO: create method with "test_" prefix, so pytest picks it up
 
 
 if __name__ == '__main__':

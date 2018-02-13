@@ -1,4 +1,4 @@
-from tfoptests import load_save_utils
+from tfoptests import persistor
 import numpy as np
 
 model_name = "gru_dynamic_mnist"
@@ -12,7 +12,7 @@ def get_input(name, mnist):
     if name == "input":
         test_len = 128
         input = mnist.test.images[:test_len].reshape((-1, timesteps, num_input))
-        load_save_utils.save_input(input, "input", save_dir)
+        persistor.save_input(input, "input", save_dir)
         return input
 
 

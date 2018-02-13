@@ -1,4 +1,4 @@
-from tfoptests import load_save_utils
+from tfoptests import persistor
 import numpy as np
 
 model_name = "norm_tests"

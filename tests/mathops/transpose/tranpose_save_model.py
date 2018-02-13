@@ -2,7 +2,7 @@ import numpy as np
 import tensorflow as tf
 
 from tests.mathops.transpose import get_input, save_dir
-from tfoptests import load_save_utils
+from tfoptests import persistor
 
 np.random.seed(13)
 
@@ -21,7 +21,7 @@ with tf.Session() as sess:
     input_0 = get_input("input_0")
     sess.run(init)
     prediction = sess.run(finish, feed_dict=my_feed_dict)
-    load_save_utils.save_graph(sess, all_saver, save_dir)
-    load_save_utils.save_prediction(save_dir, prediction)
+    persistor.save_graph(sess, all_saver, save_dir)
+    persistor.save_prediction(save_dir, prediction)
 
 

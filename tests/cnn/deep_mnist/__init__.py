@@ -1,4 +1,4 @@
-from tfoptests.load_save_utils import TensorFlowPersistor
+from tfoptests.persistor import TensorFlowPersistor
 import numpy as np
 
 save_dir = "deep_mnist"

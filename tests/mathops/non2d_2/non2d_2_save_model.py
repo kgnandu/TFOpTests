@@ -1,6 +1,6 @@
 import tensorflow as tf
 
-from tfoptests import load_save_utils
+from tfoptests import persistor
 from tests.mathops.non2d_2 import get_input, save_dir
 
 my_feed_dict = {}
@@ -42,5 +42,5 @@ with tf.Session() as sess:
     prediction = sess.run(final, feed_dict=my_feed_dict)
     print prediction
     print prediction.shape
-    load_save_utils.save_graph(sess, all_saver, save_dir)
-    load_save_utils.save_prediction(save_dir, prediction)
+    persistor.save_graph(sess, all_saver, save_dir)
+    persistor.save_prediction(save_dir, prediction)

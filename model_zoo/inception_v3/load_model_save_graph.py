@@ -3,7 +3,7 @@ import tensorflow.contrib.slim as slim
 from tensorflow.contrib.slim.python.slim.nets import inception_v3
 import numpy as np
 
-from tfoptests import load_save_utils
+from tfoptests import persistor
 from model_zoo.inception_v3 import save_dir, get_input
 
 height = 299
@@ -28,5 +28,5 @@ with tf.Session() as sess:
     print prediction.shape
     print(np.sort(prediction.ravel()))
     tf.train.write_graph(sess.graph_def, '/Users/susaneraly/SKYMIND/TFImport/TF_SOURCE_CODE/downloads_from_slim/inception_v3', 'inception_v3.pbtxt')
-    load_save_utils.save_graph(sess, all_saver, save_dir)
-    load_save_utils.save_prediction(save_dir, prediction)
+    persistor.save_graph(sess, all_saver, save_dir)
+    persistor.save_prediction(save_dir, prediction)

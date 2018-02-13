@@ -1,4 +1,4 @@
-from tfoptests import load_save_utils
+from tfoptests import persistor
 import numpy as np
 
 model_name = "node_multiple_out"
@@ -9,7 +9,7 @@ def get_input(name):
     np.random.seed(13)
     if name == "input_0":
         input_0 = np.linspace(1, 120, 120).reshape(2, 3, 4, 5)
-        load_save_utils.save_input(input_0, name, save_dir)
+        persistor.save_input(input_0, name, save_dir)
         return input_0
 
 

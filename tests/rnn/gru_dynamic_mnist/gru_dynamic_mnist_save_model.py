@@ -5,7 +5,7 @@ from tensorflow.examples.tutorials.mnist import input_data
 import tensorflow as tf
 
 from tests.rnn.gru_dynamic_mnist import num_input, timesteps, save_dir, get_input
-from tfoptests import load_save_utils
+from tfoptests import persistor
 
 mnist = input_data.read_data_sets("/tmp/data/", one_hot=True)
 num_classes = 10
@@ -99,8 +99,8 @@ def main():
             X: test_data, Y: test_target})
         print('Epoch {:2d} error {:3.1f}%'.format(epoch + 1, 100 * error))
     prediction = sess.run(model.prediction, feed_dict={X: get_input("input", mnist)})
-    load_save_utils.save_prediction(save_dir, prediction)
-    load_save_utils.save_graph(sess, all_saver, save_dir)
+    persistor.save_prediction(save_dir, prediction)
+    persistor.save_graph(sess, all_saver, save_dir)
 
 
 if __name__ == '__main__':

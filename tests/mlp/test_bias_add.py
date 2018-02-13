@@ -1,6 +1,6 @@
 import numpy as np
 import tensorflow as tf
-from tfoptests.load_save_utils import TensorFlowPersistor
+from tfoptests.persistor import TensorFlowPersistor
 
 
 class BiasAdd(TensorFlowPersistor):
@@ -14,7 +14,7 @@ class BiasAdd(TensorFlowPersistor):
             return [None, 4]
 
 
-if __name__ == '__main__':
+def test_bias_add():
     # Init TFP instance
     tfp = BiasAdd(save_dir="bias_add", seed=1337)
 
@@ -29,3 +29,7 @@ if __name__ == '__main__':
 
     # Run and persist
     tfp.run_and_save_graph()
+
+
+if __name__ == '__main__':
+    test_bias_add()

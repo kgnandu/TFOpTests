@@ -1,6 +1,6 @@
 import numpy as np
 
-from tfoptests import load_save_utils
+from tfoptests import persistor
 
 model_name = "non2d_0A"
 save_dir = model_name
@@ -10,11 +10,11 @@ def get_input(name):
     np.random.seed(19)
     if name == "scalarA":
         input_1 = np.random.random_integers(0,6)
-        load_save_utils.save_input(input_1, name, save_dir)
+        persistor.save_input(input_1, name, save_dir)
         return input_1
     if name == "scalarB":
         input_1 = np.random.random_integers(0,4)
-        load_save_utils.save_input(input_1, name, save_dir)
+        persistor.save_input(input_1, name, save_dir)
         return input_1
     if name == "some_weight":
         input_2 = np.random.uniform(size=(3,4))

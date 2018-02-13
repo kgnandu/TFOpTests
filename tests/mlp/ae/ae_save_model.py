@@ -5,7 +5,7 @@ import json
 import random
 import numpy as np
 import tensorflow as tf
-from tfoptests import load_save_utils
+from tfoptests import persistor
 from tests.ae import save_dir
 
 '''
@@ -80,7 +80,7 @@ if __name__ == '__main__':
         inputs = {'input:0': np.reshape(np.linspace(1,n_in,n_in),(1,n_in))}
         inputs_save = {'input': np.reshape(np.linspace(1,n_in,n_in),(1,n_in))}
         prediction = np.asarray(sess.run([aa.encoder_op],feed_dict=inputs))
-        load_save_utils.save_graph(sess, all_saver, save_dir)
-    load_save_utils.save_prediction(save_dir, prediction)
-    load_save_utils.save_input(np.linspace(1,n_in,n_in),'input',save_dir)
+        persistor.save_graph(sess, all_saver, save_dir)
+    persistor.save_prediction(save_dir, prediction)
+    persistor.save_input(np.linspace(1,n_in,n_in),'input',save_dir)
 

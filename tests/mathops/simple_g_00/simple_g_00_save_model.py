@@ -2,7 +2,7 @@ import numpy as np
 import tensorflow as tf
 
 from tests.mathops.simple_g_00 import save_dir
-from tfoptests import load_save_utils
+from tfoptests import persistor
 
 in0 = tf.Variable(tf.random_normal([3, 3]), name="in0", dtype=tf.float32)
 n0 = tf.add(np.arange(-4., 5., 1.).astype(np.float32).reshape(3, 3), in0)
@@ -17,5 +17,5 @@ with tf.Session() as sess:
     np.random.seed(13)
     sess.run(init)
     prediction = sess.run(output)
-    load_save_utils.save_graph(sess, all_saver, save_dir)
-    load_save_utils.save_prediction(save_dir, prediction)
+    persistor.save_graph(sess, all_saver, save_dir)
+    persistor.save_prediction(save_dir, prediction)

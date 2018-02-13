@@ -1,5 +1,5 @@
 import numpy as np
-from tfoptests import load_save_utils
+from tfoptests import persistor
 
 model_name = "conv_2"
 save_dir = model_name
@@ -10,7 +10,7 @@ def get_input(name):
     np.random.seed(13)
     if name == "input_0":
         input_0 = np.random.uniform(size=imsize)
-        load_save_utils.save_input(input_0, name, save_dir)
+        persistor.save_input(input_0, name, save_dir)
         return input_0
 
 

@@ -1,7 +1,7 @@
 import numpy as np
 import tensorflow as tf
 
-from tfoptests import load_save_utils
+from tfoptests import persistor
 
 
 def load_graph(model_file):
@@ -42,4 +42,4 @@ with tf.Session(graph=graph) as sess:
     # Note: we don't nee to initialize/restore anything
     # There is no Variables in this graph, only hardcoded constants
     prediction = sess.run(y, feed_dict={x: input_0})
-    load_save_utils.save_prediction("/Users/susaneraly/", prediction)
+    persistor.save_prediction("/Users/susaneraly/", prediction)

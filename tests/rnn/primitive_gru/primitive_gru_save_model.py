@@ -2,7 +2,7 @@ import tensorflow as tf
 from tests.rnn.primitive_gru import featuresize, timesteps, minibatch, get_input, get_output, save_dir
 from tensorflow.contrib import rnn
 
-from tfoptests import load_save_utils
+from tfoptests import persistor
 
 num_hidden = 3
 learning_rate = 0.001
@@ -63,5 +63,5 @@ with tf.Session() as sess:
     print(get_output("output"))
     print("====")
     print(prediction)
-    load_save_utils.save_prediction(save_dir, prediction)
-    load_save_utils.save_graph(sess, all_saver, save_dir)
+    persistor.save_prediction(save_dir, prediction)
+    persistor.save_graph(sess, all_saver, save_dir)
