@@ -3,7 +3,7 @@ import tensorflow.contrib.slim as slim
 from tensorflow.contrib.slim.python.slim.nets import inception_v3
 import numpy as np
 
-from helper import load_save_utils
+from tfoptests import load_save_utils
 from model_zoo.inception_v3 import save_dir, get_input
 
 height = 299

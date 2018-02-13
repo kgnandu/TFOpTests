@@ -2,7 +2,7 @@ from __future__ import print_function
 import numpy as np
 import tensorflow as tf
 
-from helper import load_save_utils
+from tfoptests import load_save_utils
 
 base_dir = "/Users/susaneraly/SKYMIND/nd4j/nd4j-backends/nd4j-tests/src/test/resources/tf_graphs/examples"
 model_name = "conv_0"

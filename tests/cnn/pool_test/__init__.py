@@ -1,19 +1,20 @@
 from tfoptests import load_save_utils
 import numpy as np
 
-model_name = "inception_v3_with_softmax"
+model_name = "pool_0"
 save_dir = model_name
+imsize = [1, 4, 4, 2]
 
 def get_input(name):
     np.random.seed(13)
-    if name == "input":
-        input = np.random.uniform(-1,1,size=[1,299,299,3]) #fake image
-        load_save_utils.save_input(input, name, save_dir)
-        return input
+    if name == "input_0":
+        input_0 = np.random.randint(10,size=imsize)
+        load_save_utils.save_input(input_0, name, save_dir)
+        return input_0
 
 
 def list_inputs():
-    return ["input"]
+    return ["input_0"]
 
 
 def get_inputs():

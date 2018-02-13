@@ -1,7 +1,7 @@
 import numpy as np
 import tensorflow as tf
 
-from helper import load_save_utils
+from tfoptests import load_save_utils
 
 
 def load_graph(model_file):
