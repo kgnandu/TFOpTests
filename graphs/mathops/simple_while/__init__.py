@@ -17,7 +17,7 @@ def get_input(name):
 
 
 def list_inputs():
-    return ["greater", "input_1"]
+    return []
 
 
 def get_inputs():
