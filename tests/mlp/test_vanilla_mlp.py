@@ -9,7 +9,6 @@ num_classes = 3
 
 
 class VanillaMLP(TensorFlowPersistor):
-
     def _get_input(self, name):
         if name == "input":
             input_0 = np.random.uniform(size=(mini_batch, num_input))
@@ -17,20 +16,20 @@ class VanillaMLP(TensorFlowPersistor):
 
     def _get_input_shape(self, name):
         if name == "input":
-            return [mini_batch, num_input]
+            return [None, num_input]
 
 
 def neural_net(input):
     # Define weights and biases for model
     weights = dict(
-        h1=tf.Variable(tf.random_normal([num_input, n_hidden_1]),
-                       name="l0W", dtype=tf.float32),
-        out=tf.Variable(tf.random_normal([n_hidden_1, num_classes]),
-                        name="l1W", dtype=tf.float32)
+        h1=tf.Variable(tf.random_normal([num_input, n_hidden_1], dtype=tf.float64),
+                       name="l0W"),
+        out=tf.Variable(tf.random_normal([n_hidden_1, num_classes], dtype=tf.float64),
+                        name="l1W")
     )
     biases = dict(
-        b1=tf.Variable(tf.random_normal([n_hidden_1]), name="l0B"),
-        out=tf.Variable(tf.random_normal([num_classes]), name="l1B")
+        b1=tf.Variable(tf.random_normal([n_hidden_1], dtype=tf.float64), name="l0B"),
+        out=tf.Variable(tf.random_normal([num_classes], dtype=tf.float64), name="l1B")
     )
     # Define model
     layer_1 = tf.nn.bias_add(tf.matmul(input, weights['h1']), biases['b1'], name="l0Preout")
@@ -38,11 +37,7 @@ def neural_net(input):
     out_layer = tf.nn.bias_add(tf.matmul(layer_1_post_actv, weights['out']), biases['out'], name="l1PreOut")
     return out_layer
 
-# TODO: fix this
-# TODO: create method with "test_" prefix, so pytest picks it up
-
-
-if __name__ == '__main__':
+def test_vanilla_mlp():
     # Init TFP instance
     tfp = VanillaMLP(save_dir="mlp_00", seed=1337)
 
@@ -51,10 +46,13 @@ if __name__ == '__main__':
     tfp.set_placeholders([in_node])
 
     #  Construct model and set output tensor
-    input = tf.placeholder("float", tfp._get_input_shape("input"), name="input")
-    logits = neural_net(input)
+    logits = neural_net(in_node)
     out_node = tf.nn.softmax(logits, name='output')
     tfp.set_output_tensors([out_node])
 
     # Run and persist
     tfp.run_and_save_graph()
+
+
+if __name__ == '__main__':
+    test_vanilla_mlp()

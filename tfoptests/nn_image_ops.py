@@ -3,13 +3,8 @@ from __future__ import print_function
 import tensorflow as tf
 import numpy as np
 
-'''
-http://mourafiq.com/2016/08/10/playing-with-convolutions-in-tensorflow.html
-'''
-
 
 class NNImageOps:
-
     def __init__(self, img):
         self.inp = img
         self.node_num = 0
@@ -62,7 +57,8 @@ class NNImageOps:
         return tf.nn.conv2d(self.inp, self.filter, self.strides, self.padding, name="conv2d" + str(self.node_num))
 
     def execute_max_pool(self):
-        return tf.nn.max_pool(self.inp, self.kernel_size, self.strides, self.padding, name="max_pool" + str(self.node_num))
+        return tf.nn.max_pool(self.inp, self.kernel_size, self.strides, self.padding,
+                              name="max_pool" + str(self.node_num))
 
     def flatten_convolution(self, tensor_in):
         tensor_in_shape = tensor_in.get_shape()

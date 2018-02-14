@@ -1,17 +1,20 @@
 from __future__ import print_function
 
 from abc import ABCMeta, abstractmethod
+
 try:
     from itertools import izip as zip
 except:
     # just use plain zip in py3
     pass
 import os
+import sys
 import tensorflow as tf
 import numpy as np
 from tensorflow.python.tools import freeze_graph
 
-BASE_DIR = os.environ['DL4J_TEST_RESOURCES'] + '/src/main/resources/tf_graphs/examples'
+# BASE_DIR = os.environ['DL4J_TEST_RESOURCES'] + '/src/main/resources/tf_graphs/examples'
+BASE_DIR = '/Users/susaneraly/SKYMIND/dl4j-test-resources/src/main/resources/tf_graphs/examples'
 
 
 class TensorFlowPersistor():
@@ -153,34 +156,41 @@ class TensorFlowPersistor():
         for op in graph.get_operations():
             if op.type != "Placeholder":
                 continue
-            print(op.name)  # there is a prefix and a suffix - there should only be one prefix
+            if self.verbose:
+                print(op.name)  # there is a prefix and a suffix - there should only be one prefix
+                print("-----------------------------------------------------")
             placeholder_name = "/".join(op.name.split("/")[1:])
             placeholder_dict[op.name + ":0"] = input_dict[placeholder_name]
 
+        for op in graph.get_operations():
+            if op.type == "Placeholder":
+                continue
             if self.verbose:
-                print("-----------------------------------------------------")
-            for op in graph.get_operations():
-                if op.type == "Placeholder":
-                    continue
+                print(op.name)
+                print(op.type)
+            output_num = 0
+            for op_output in op.outputs:
                 if self.verbose:
-                    print(op.name)
-                    print(op.type)
-                output_num = 0
-                for op_output in op.outputs:
-                    if self.verbose:
-                        print(op_output.name)
-                    with tf.Session(graph=graph) as sess:
-                        try:
+                    print(op_output.name)
+                with tf.Session(graph=graph) as sess:
+                    try:
+                        if op_output.dtype.is_bool:
+                            if self.verbose:
+                                print("SKIPPING bool")
+                                print("-----------------------------------------------------")
+                        else:
                             op_prediction = sess.run(op_output, feed_dict=placeholder_dict)
-                            save_to = ".".join(["____".join(op_output.name.split("/")[1:]).split(":")[0], str(output_num)])
-                            self._save_intermediate(op_prediction, save_to)
                             if self.verbose:
                                 print(op_prediction)
                                 print("-----------------------------------------------------")
-                        except:
-                            if self.verbose:
-                                print("SKIPPING")
-                                print("-----------------------------------------------------")
+                            save_to = ".".join(
+                                ["____".join(op_output.name.split("/")[1:]).split(":")[0], str(output_num)])
+                            self.save_intermediate(op_prediction, save_to)
+                    except:
+                        print("Unexpected error:", sys.exc_info()[0])
+                        if self.verbose:
+                            print("SKIPPING")
+                            print("-----------------------------------------------------")
 
     def load_external_graph(self, model_file):
         graph = tf.Graph()
