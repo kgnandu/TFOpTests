@@ -53,6 +53,7 @@ def deepnn(x):
     # Reshape to use within a convolutional neural net.
     # Last dimension is for "features" - there is only one here, since images are
     # grayscale -- it would be 3 for an RGB image, 4 for RGBA, etc.
+    keep_prob = tf.placeholder(tf.float32, name="keep_prob")
     with tf.name_scope('reshape'):
         x_image = tf.reshape(x, [-1, 28, 28, 1])
 
@@ -88,7 +89,6 @@ def deepnn(x):
     # Dropout - controls the complexity of the model, prevents co-adaptation of
     # features.
     with tf.name_scope('dropout'):
-        keep_prob = tf.placeholder(tf.float32)
         h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob)
 
     # Map the 1024 features to 10 classes, one for each digit
@@ -137,7 +137,7 @@ def main(_):
 
     # Build the graph for the deep net
     y_conv, keep_prob = deepnn(x)
-    my_feed_dict[keep_prob] = 1.0
+    my_feed_dict[keep_prob] = get_input("keep_prob", mnist)
     softmax_out = tf.nn.softmax(y_conv, name="output")
 
     with tf.name_scope('loss'):
@@ -165,12 +165,12 @@ def main(_):
             batch = mnist.train.next_batch(50)
             if i % 100 == 0:
                 train_accuracy = accuracy.eval(feed_dict={
-                    x: batch[0], y_: batch[1], keep_prob: 1.0})
+                    x: batch[0], y_: batch[1], keep_prob: 0.6})
                 print('step %d, training accuracy %g' % (i, train_accuracy))
-            train_step.run(feed_dict={x: batch[0], y_: batch[1], keep_prob: 0.5})
+            train_step.run(feed_dict={x: batch[0], y_: batch[1], keep_prob: 0.6})
 
         print('test accuracy %g' % accuracy.eval(feed_dict={
-            x: mnist.test.images, y_: mnist.test.labels, keep_prob: 1.0}))
+            x: mnist.test.images, y_: mnist.test.labels, keep_prob: 0.6}))
 
         prediction = sess.run(softmax_out, feed_dict=my_feed_dict)
         load_save_utils.save_graph(sess, all_saver, save_dir)

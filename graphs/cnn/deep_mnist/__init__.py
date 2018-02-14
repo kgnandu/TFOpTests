@@ -11,15 +11,18 @@ def get_input(name, mnist):
         input = mnist.test.images[:100, :]
         load_save_utils.save_input(input, "input", save_dir)
         return input
+    if name == "keep_prob":
+        input = 0.6
+        load_save_utils.save_input(input, "keep_prob", save_dir)
+        return input
 
 
 def list_inputs():
-    return ["input"]
+    return ["input", "keep_prob"]
 
 
 def get_inputs(mnist):
     my_input_dict = {}
     for a_input in list_inputs():
         my_input_dict[a_input] = get_input(a_input, mnist)
-    my_input_dict["dropout/Placeholder"] = 1.0
     return my_input_dict
