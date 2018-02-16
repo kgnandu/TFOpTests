@@ -39,6 +39,7 @@ class VanillaMLP(TensorFlowPersistor):
         logits = tf.nn.bias_add(tf.matmul(layer_1_post_actv, weights['out']), biases['out'], name="l1PreOut")
         out_node = tf.nn.softmax(logits, name='output')
         self.set_output_tensors([out_node])
+        return [None,None]
 
 
 def test_vanilla_mlp():

@@ -19,6 +19,7 @@ class BiasAdd(TensorFlowPersistor):
         biases = tf.Variable(tf.lin_space(1.0, 4.0, 4), name="bias")
         out_node = tf.nn.bias_add(in_node, tf.cast(biases, dtype=tf.float64), name="output")
         self.set_output_tensors([out_node])
+        return [None, None]
 
 
 def test_bias_add():

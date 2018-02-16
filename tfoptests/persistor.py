@@ -13,10 +13,10 @@ import tensorflow as tf
 import numpy as np
 from tensorflow.python.tools import freeze_graph
 
-BASE_DIR = os.environ['DL4J_TEST_RESOURCES'] + '/src/main/resources/tf_graphs/examples'
+# BASE_DIR = os.environ['DL4J_TEST_RESOURCES'] + '/src/main/resources/tf_graphs/examples'
 
 
-# BASE_DIR = '/Users/susaneraly/SKYMIND/dl4j-test-resources/src/main/resources/tf_graphs/examples'
+BASE_DIR = '/Users/susaneraly/SKYMIND/dl4j-test-resources/src/main/resources/tf_graphs/examples'
 
 
 class TensorFlowPersistor():
@@ -264,13 +264,14 @@ class TensorFlowPersistor():
             with tf.Session() as sess:
                 sess.run(init)
                 predictions = sess.run(self.graph_output_tensors, feed_dict=placeholder_feed_dict)
+                self.save_graph(sess, all_saver)
         else:
             predictions = sess.run(self.graph_output_tensors, feed_dict=placeholder_feed_dict)
+            self.save_graph(sess, all_saver)
+            sess.close
         first_pass_dict = dict(zip(self._list_output_node_names(), predictions))
         if self.verbose:
             print(predictions)
-        self.save_graph(sess, all_saver)
-        sess.close()
         self.save_predictions(first_pass_dict)
         self.freeze_n_save_graph(output_node_names=",".join(self._list_output_node_names()))
         self.write_frozen_graph_txt()
@@ -278,5 +279,6 @@ class TensorFlowPersistor():
         # Better way to do this assert??
         assert second_pass_dict.keys() == first_pass_dict.keys()
         for a_output in second_pass_dict.keys():
-            np.testing.assert_equal(first_pass_dict[a_output], out_after_train[a_output])
+            if out_after_train is not None:
+                np.testing.assert_equal(first_pass_dict[a_output], out_after_train[a_output])
             np.testing.assert_equal(first_pass_dict[a_output], second_pass_dict[a_output])
