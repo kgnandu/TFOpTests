@@ -153,14 +153,19 @@ class TensorFlowPersistor():
     def save_intermediate_nodes(self, input_dict):
         graph = self.load_frozen_graph()
         placeholder_dict = {}
+        prediction_dict = {}
+        if self.verbose:
+            print("-----------------------------------------------------")
+            print("PLACEHOLDER LIST:")
         for op in graph.get_operations():
             if op.type != "Placeholder":
                 continue
             if self.verbose:
                 print(op.name)  # there is a prefix and a suffix - there should only be one prefix
-                print("-----------------------------------------------------")
             placeholder_name = "/".join(op.name.split("/")[1:])
             placeholder_dict[op.name + ":0"] = input_dict[placeholder_name]
+        if self.verbose:
+            print("-----------------------------------------------------")
 
         for op in graph.get_operations():
             if op.type == "Placeholder":
@@ -168,7 +173,6 @@ class TensorFlowPersistor():
             if self.verbose:
                 print(op.name)
                 print(op.type)
-            output_num = 0
             for op_output in op.outputs:
                 if self.verbose:
                     print(op_output.name)
@@ -180,17 +184,23 @@ class TensorFlowPersistor():
                                 print("-----------------------------------------------------")
                         else:
                             op_prediction = sess.run(op_output, feed_dict=placeholder_dict)
+                            tensor_output_name = ("/".join(op_output.name.split("/")[1:])).split(":")[0]
+                            tensor_output_num = op_output.name.split(":")[1]
+                            if tensor_output_name in self._list_output_node_names():
+                                prediction_dict[tensor_output_name] = op_prediction
                             if self.verbose:
                                 print(op_prediction)
                                 print("-----------------------------------------------------")
-                            save_to = ".".join(
-                                ["____".join(op_output.name.split("/")[1:]).split(":")[0], str(output_num)])
+                            modified_tensor_output_name = "____".join(tensor_output_name.split("/"))
+                            save_to = ".".join([modified_tensor_output_name, tensor_output_num])
                             self.save_intermediate(op_prediction, save_to)
                     except:
                         print("Unexpected error:", sys.exc_info()[0])
                         if self.verbose:
+                            print(op_output)
                             print("SKIPPING")
                             print("-----------------------------------------------------")
+        return prediction_dict
 
     def load_external_graph(self, model_file):
         graph = tf.Graph()
@@ -236,10 +246,15 @@ class TensorFlowPersistor():
         with tf.Session() as sess:
             sess.run(init)
             predictions = sess.run(self.graph_output_tensors, feed_dict=placeholder_feed_dict)
+            first_pass_dict = dict(zip(self._list_output_node_names(), predictions))
             if self.verbose:
                 print(predictions)
-            self.save_predictions(dict(zip(self._list_output_node_names(), predictions)))
             self.save_graph(sess, all_saver)
+        self.save_predictions(first_pass_dict)
         self.freeze_n_save_graph(output_node_names=",".join(self._list_output_node_names()))
         self.write_frozen_graph_txt()
-        self.save_intermediate_nodes(placeholder_name_value_dict)
+        second_pass_dict = self.save_intermediate_nodes(placeholder_name_value_dict)
+        # Better way to do this assert??
+        assert second_pass_dict.keys() == first_pass_dict.keys()
+        for a_output in second_pass_dict.keys():
+            np.testing.assert_equal(first_pass_dict[a_output], second_pass_dict[a_output])

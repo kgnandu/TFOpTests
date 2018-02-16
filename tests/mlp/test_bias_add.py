@@ -1,5 +1,6 @@
 import numpy as np
 import tensorflow as tf
+import unittest
 from tfoptests.persistor import TensorFlowPersistor
 
 
@@ -28,6 +29,7 @@ def test_bias_add():
     tfp.set_output_tensors([out_node])
 
     # Run and persist
+    # Now there is an assert in the persistor. Is there a better way to do this? - custom assert?? Dunno
     tfp.run_and_save_graph()
 
 
