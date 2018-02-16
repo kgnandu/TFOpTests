@@ -270,6 +270,7 @@ class TensorFlowPersistor():
         if self.verbose:
             print(predictions)
         self.save_graph(sess, all_saver)
+        sess.close()
         self.save_predictions(first_pass_dict)
         self.freeze_n_save_graph(output_node_names=",".join(self._list_output_node_names()))
         self.write_frozen_graph_txt()
