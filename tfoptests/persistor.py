@@ -7,7 +7,6 @@ try:
 except:
     # just use plain zip in py3
     pass
-import os
 import sys
 import tensorflow as tf
 import numpy as np
@@ -32,6 +31,8 @@ class TensorFlowPersistor():
         self.base_dir = BASE_DIR if base_dir is None else base_dir
         self.seed = None
         self.verbose = verbose
+        self._graph_placeholders = None
+        self._graph_output_tensors = None
 
     @abstractmethod
     def _get_input(self, name):
@@ -41,6 +42,11 @@ class TensorFlowPersistor():
     @abstractmethod
     def _get_input_shape(self, name):
         '''Get input tensor shape for given node name'''
+        raise NotImplementedError
+
+    @abstractmethod
+    def _neural_net(self):
+        '''Implement the neural net and if training return the TF sess. TODO: Document better with example'''
         raise NotImplementedError
 
     @property
@@ -228,9 +234,15 @@ class TensorFlowPersistor():
         return tf.placeholder(dtype=data_type, shape=self._get_input_shape(name), name=name)
 
     def _check_outputs(self):
-        for a_output in self.graph_output_tensors:
+        if self._graph_output_tensors is None:
+            raise ValueError("Ouput tensor list not set")
+        for a_output in self._graph_output_tensors:
             if isinstance(a_output, list):
                 raise ValueError('Output tensor elements cannot be lists...')
+
+    def _check_inputs(self):
+        if self._graph_placeholders is None:
+            raise ValueError("Input tensor placeholder list not set")
 
     def _list_output_node_names(self):
         output_node_names = []
@@ -238,18 +250,23 @@ class TensorFlowPersistor():
             output_node_names.append(a_output.name.split(":")[0])
         return output_node_names
 
-    def run_and_save_graph(self):
+    def build_and_save_graph(self):
+        sess, out_after_train = self._neural_net()  # build the neural net
+        self._check_inputs()  # make sure input placeholders are set
+        self._check_outputs()  # make sure outputs are set
         placeholder_feed_dict, placeholder_name_value_dict = self._get_input_dicts()
-        self._check_outputs()
-        init = tf.global_variables_initializer()
         all_saver = tf.train.Saver()
-        with tf.Session() as sess:
-            sess.run(init)
+        if sess is None:
+            init = tf.global_variables_initializer()
+            with tf.Session() as sess:
+                sess.run(init)
+                predictions = sess.run(self.graph_output_tensors, feed_dict=placeholder_feed_dict)
+        else:
             predictions = sess.run(self.graph_output_tensors, feed_dict=placeholder_feed_dict)
-            first_pass_dict = dict(zip(self._list_output_node_names(), predictions))
-            if self.verbose:
-                print(predictions)
-            self.save_graph(sess, all_saver)
+        first_pass_dict = dict(zip(self._list_output_node_names(), predictions))
+        if self.verbose:
+            print(predictions)
+        self.save_graph(sess, all_saver)
         self.save_predictions(first_pass_dict)
         self.freeze_n_save_graph(output_node_names=",".join(self._list_output_node_names()))
         self.write_frozen_graph_txt()
@@ -257,4 +274,5 @@ class TensorFlowPersistor():
         # Better way to do this assert??
         assert second_pass_dict.keys() == first_pass_dict.keys()
         for a_output in second_pass_dict.keys():
+            np.testing.assert_equal(first_pass_dict[a_output], out_after_train[a_output])
             np.testing.assert_equal(first_pass_dict[a_output], second_pass_dict[a_output])
