@@ -5,8 +5,8 @@ from tfoptests.persistor import TensorFlowPersistor
 
 
 class SimpleAE(TensorFlowPersistor):
-    def __init__(self, save_dir, seed=None, base_dir=None, verbose=True):
-        super(SimpleAE, self).__init__(save_dir, seed, base_dir, verbose)
+    def __init__(self, *args, **kwargs):
+        super(SimpleAE, self).__init__(*args, **kwargs)
         self.train_input, self.train_output = generate_input_output()
         print(self.train_input)
         print(self.train_output)
