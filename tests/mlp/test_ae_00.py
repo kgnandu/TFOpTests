@@ -6,8 +6,8 @@ from tfoptests.test_graph import TestGraph
 
 
 class SimpleAE(TestGraph):
-    def __init__(self, seed=None, verbose=True):
-        TestGraph.__init__(self, seed=seed, verbose=verbose)
+    def __init__(self, *args, **kwargs):
+        super(SimpleAE, self).__init__(*args, **kwargs)
         self.train_input, self.train_output = generate_input_output()
         self.n_input = self.train_input.shape[1]
         self.n_hidden = 2

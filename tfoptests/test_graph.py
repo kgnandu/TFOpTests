@@ -2,7 +2,7 @@
 import tensorflow as tf
 
 
-class TestGraph:
+class TestGraph(object):
     # __metaclass__ = ABCMeta
 
     def __init__(self, seed=None, verbose=True):

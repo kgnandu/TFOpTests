@@ -10,10 +10,6 @@ num_classes = 3
 
 
 class VanillaMLP(TestGraph):
-    def __init__(self, seed=None, verbose=True):
-        self.verbose = verbose
-        self.seed = seed
-
     def list_inputs(self):
         return ["input"]
 
