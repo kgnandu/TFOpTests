@@ -25,7 +25,7 @@ class TestGraph(object):
     def list_inputs(self):
         '''List names of input nodes'''
         # raise NotImplementedError
-        return [None]
+        return ["input"]
 
     def get_placeholder(self, name, data_type="float64"):
         return tf.placeholder(dtype=data_type, shape=self._get_placeholder_shape(name), name=name)
