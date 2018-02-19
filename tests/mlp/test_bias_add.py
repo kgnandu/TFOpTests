@@ -5,7 +5,7 @@ from tfoptests.test_graph import TestGraph
 
 
 class BiasAdd(TestGraph):
-    def _get_placeholder_input(self, name):
+    def get_placeholder_input(self, name):
         if name == "input":
             input_0 = np.linspace(1, 40, 40).reshape(10, 4)
             return input_0

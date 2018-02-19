@@ -12,10 +12,7 @@ class SimpleAE(TestGraph):
         self.n_input = self.train_input.shape[1]
         self.n_hidden = 2
 
-    def list_inputs(self):
-        return ["input"]
-
-    def _get_placeholder_input(self, name):
+    def get_placeholder_input(self, name):
         if name == "input":
             return self.train_input
         if name == "target":

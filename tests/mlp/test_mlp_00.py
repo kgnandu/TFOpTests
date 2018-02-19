@@ -13,7 +13,7 @@ class VanillaMLP(TestGraph):
     def list_inputs(self):
         return ["input"]
 
-    def _get_placeholder_input(self, name):
+    def get_placeholder_input(self, name):
         if name == "input":
             input_0 = np.random.uniform(size=(mini_batch, num_input))
             return input_0
