@@ -24,7 +24,6 @@ class VanillaMLP(TestGraph):
 
 
 def test_vanilla_mlp():
-    # Init TFP instance
     vanilla_mlp = VanillaMLP(seed=1337)
     in_node = vanilla_mlp.get_placeholder("input")
     weights = dict(

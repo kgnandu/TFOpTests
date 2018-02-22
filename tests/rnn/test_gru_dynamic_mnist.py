@@ -1,6 +1,5 @@
 import functools
 import numpy as np
-import math
 import tensorflow as tf
 from tfoptests.persistor import TensorFlowPersistor
 from tfoptests.test_graph import TestGraph
@@ -93,7 +92,7 @@ class SequenceClassification(TestGraph):
 
 
 def test_sequence_classification():
-    sequence_classifier = SequenceClassification(seed=713)
+    sequence_classifier = SequenceClassification(seed=713, num_hidden=20)
     sess = tf.Session()
     sess.run(tf.global_variables_initializer())
     test_data = sequence_classifier.get_placeholder_input("input")

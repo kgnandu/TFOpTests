@@ -19,7 +19,6 @@ class BiasAdd(TestGraph):
 
 
 def test_bias_add():
-    # Init TFP instance
     bias_add = BiasAdd(seed=1337)
     in_node = bias_add.get_placeholder("input")
     biases = tf.Variable(tf.lin_space(1.0, 4.0, 4), name="bias")
