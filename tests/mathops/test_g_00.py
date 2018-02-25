@@ -16,11 +16,10 @@ def test_mathops_zero():
     n1 = tf.abs(n0)
     n2 = tf.rsqrt(n1)
     out_node = tf.tanh(n2, name="output")
-    placeholders = []
     predictions = [out_node]
     # Run and persist
     tfp = TensorFlowPersistor(save_dir="g_00")
-    tfp.set_placeholders(placeholders) \
+    tfp.set_placeholders([]) \
         .set_output_tensors(predictions) \
         .set_test_data(mathops_0.get_test_data()) \
         .build_save_frozen_graph()
