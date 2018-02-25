@@ -41,15 +41,15 @@ def test_tensor_rearrange():
     in_node_a = tensor_rearrange.get_placeholder("input_0")
     in_node_b = tensor_rearrange.get_placeholder("input_1")
     in_node_c = tensor_rearrange.get_placeholder("input_2")
-    stiched = tf.dynamic_stitch([[1, 10], [[0, 7, 9], [5, 8, 3]], [[6], [4], [2]]],
-                                [in_node_a, in_node_b, in_node_c])  # should be 11,5,4
-    list_of_parts = tf.dynamic_partition(tf.transpose(stiched, perm=[1, 2, 0]),
+    stitched = tf.dynamic_stitch([[1, 10], [[0, 7, 9], [5, 8, 3]], [[6], [4], [2]]],
+                                 [in_node_a, in_node_b, in_node_c])  # should be 11,5,4
+    list_of_parts = tf.dynamic_partition(tf.transpose(stitched, perm=[1, 2, 0]),
                                          [[0, 1, 2, 3], [1, 0, 2, 3], [2, 3, 1, 0], [2, 1, 0, 3], [0, 1, 2, 3]],
-                                         num_partitions=4)
+                                         num_partitions=4)  # after permute becomes 5,4,11, return all partitions 5,11
     node_a = tf.div(list_of_parts[0], list_of_parts[1])
     node_b = tf.divide(list_of_parts[2], list_of_parts[3])
     trace_node = tf.trace(node_a) + node_b  # there is a broadcast here
-    out_node = tf.cast(tf.count_nonzero(trace_node),dtype=tf.float32) + tf.Variable(tf.random_normal(shape=(2, 3)))
+    out_node = tf.cast(tf.count_nonzero(trace_node), dtype=tf.float32) + tf.Variable(tf.random_normal(shape=(2, 3)))
 
     placeholders = [in_node_a, in_node_b, in_node_c]
     predictions = [out_node]
