@@ -7,6 +7,8 @@ except:
     pass
 import sys
 import os
+import errno
+import shutil
 import tensorflow as tf
 import numpy as np
 from tensorflow.python.tools import freeze_graph
@@ -210,15 +212,26 @@ class TensorFlowPersistor:
         if self._placeholders is None:
             raise ValueError("Input tensor placeholder list not set")
 
+    def _clean_dir(self):
+        working_dir = "{}/{}".format(self.base_dir, self.save_dir)
+        if os.path.exists(working_dir):
+            shutil.rmtree(working_dir)
+        try:
+            os.makedirs(working_dir)
+        except OSError as exception:
+            if exception.errno != errno.EEXIST:
+                raise
+
     def _list_output_node_names(self):
         output_node_names = []
         for a_output in self._output_tensors:
             output_node_names.append(a_output.name.split(":")[0])
         return output_node_names
 
-    def build_save_frozen_graph(self):
+    def build_save_frozen_graph(self, skip_intermediate=False):
         self._check_inputs()  # make sure input placeholders are set
         self._check_outputs()  # make sure outputs are set
+        self._clean_dir()  # clean contents of dir
         placeholder_feed_dict = self._get_placeholder_dict()
         all_saver = tf.train.Saver()
         if self._sess is None:
@@ -237,9 +250,10 @@ class TensorFlowPersistor:
         self._save_predictions(first_pass_dict)
         self._freeze_n_save_graph(output_node_names=",".join(self._list_output_node_names()))
         self.write_frozen_graph_txt()
-        second_pass_dict = self._save_intermediate_nodes(self._placeholder_name_value_dict)
-        # Better way to do this assert??
-        assert second_pass_dict.keys() == first_pass_dict.keys()
-        for a_output in second_pass_dict.keys():
-            np.testing.assert_equal(first_pass_dict[a_output], second_pass_dict[a_output])
+        if not skip_intermediate:
+            second_pass_dict = self._save_intermediate_nodes(self._placeholder_name_value_dict)
+            # TODO: Better way to do this assert??
+            assert second_pass_dict.keys() == first_pass_dict.keys()
+            for a_output in second_pass_dict.keys():
+                np.testing.assert_equal(first_pass_dict[a_output], second_pass_dict[a_output])
         return predictions
