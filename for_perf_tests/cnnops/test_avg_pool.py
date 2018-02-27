@@ -1,6 +1,6 @@
 import tensorflow as tf
 
-from for_perf_tests.cnnops.image_input import ImageInput
+from tests.cnn.image_input import ImageInput
 from tfoptests.persistor import TensorFlowPersistor
 
 
