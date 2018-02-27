@@ -38,7 +38,7 @@ class PrimitiveGRU(TestGraph):
 
 def RNNBasic(x, weights, biases, num_hidden):
     x = tf.unstack(x, axis=2)
-    lstm_cell = rnn.GRUCell(num_hidden, forget_bias=1.0)
+    lstm_cell = rnn.GRUCell(num_hidden)
     # inputs: A length T list of inputs,
     #  each a Tensor of shape [batch_size, input_size], or a nested tuple of such elements.
     outputs, states = rnn.static_rnn(lstm_cell, x, dtype=tf.float64)
