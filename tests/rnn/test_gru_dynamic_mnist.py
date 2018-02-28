@@ -27,6 +27,7 @@ def lazy_property(function):
 
 class SequenceClassification(TestGraph):
     def __init__(self, num_hidden=200, num_layers=3, *args, **kwargs):
+        super(SequenceClassification, self).__init__(*args, **kwargs)
         self._num_hidden = num_hidden
         self._num_layers = num_layers
         self.input_placeholder = self.get_placeholder("input", data_type=tf.float32)
@@ -34,7 +35,6 @@ class SequenceClassification(TestGraph):
         self.prediction
         self.error
         self.optimize
-        super(SequenceClassification, self).__init__(*args, **kwargs)
 
     @lazy_property
     def prediction(self):

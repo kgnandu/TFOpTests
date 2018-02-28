@@ -6,8 +6,8 @@ from tfoptests.test_graph import TestGraph
 
 class ExpandDimT(TestGraph):
     def __init__(self, *args, **kwargs):
-        self.input_0 = np.random.uniform(size=(3, 4))
         super(ExpandDimT, self).__init__(*args, **kwargs)
+        self.input_0 = np.random.uniform(size=(3, 4))
 
     def list_inputs(self):
         return ["input_0"]

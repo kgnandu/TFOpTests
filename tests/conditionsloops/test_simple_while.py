@@ -1,6 +1,8 @@
 import tensorflow as tf
 from tfoptests.persistor import TensorFlowPersistor
 
+tf.set_random_seed(1)
+
 
 def test_simple_while():
     i1 = tf.Variable(tf.constant(0), name='loop_var')
@@ -16,6 +18,7 @@ def test_simple_while():
         .set_output_tensors(predictions) \
         .set_test_data({}) \
         .build_save_frozen_graph()
+
 
 if __name__ == '__main__':
     test_simple_while()

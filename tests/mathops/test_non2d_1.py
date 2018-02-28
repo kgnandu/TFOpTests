@@ -6,9 +6,9 @@ from tfoptests.test_graph import TestGraph
 
 class NonTwoDOne(TestGraph):
     def __init__(self, *args, **kwargs):
+        super(NonTwoDOne, self).__init__(*args, **kwargs)
         self.input_scalar = np.random.uniform()
         self.input_vector = np.random.uniform(size=2)
-        super(NonTwoDOne, self).__init__(*args, **kwargs)
 
     def list_inputs(self):
         return ["scalar", "vector"]

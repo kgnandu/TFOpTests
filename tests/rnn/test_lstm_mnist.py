@@ -10,9 +10,9 @@ MNIST = input_data.read_data_sets('/tmp/tensorflow/mnist/input_data', one_hot=Tr
 
 class SequenceClassification(TestGraph):
     def __init__(self, test_size=100, *args, **kwargs):
+        super(SequenceClassification, self).__init__(*args, **kwargs)
         self.test_input = MNIST.test.images[:test_size].reshape((-1, 28, 28))
         self.test_target = MNIST.test.labels[:test_size]
-        super(SequenceClassification, self).__init__(*args, **kwargs)
 
     def get_placeholder_input(self, name):
         if name == "input":

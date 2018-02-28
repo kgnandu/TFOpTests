@@ -11,10 +11,10 @@ Toy network for testing a primitve lstm - completely static
 
 class PrimitiveLSTM(TestGraph):
     def __init__(self, feature_size=5, time_steps=9, *args, **kwargs):
+        super(PrimitiveLSTM, self).__init__(*args, **kwargs)
         self.feature_size = feature_size
         self.time_steps = time_steps
         self.train_input, self.train_target = self._generate_time_seq(feature_size=feature_size, time_steps=time_steps)
-        super(PrimitiveLSTM, self).__init__(*args, **kwargs)
 
     def _generate_time_seq(self, feature_size, time_steps, mini_batch=5):
         self.feature_size = 2
@@ -48,7 +48,7 @@ def RNNBasic(x, weights, biases, num_hidden):
 def test_primitive_lstm():
     feature_size = 2
     num_hidden = 3
-    primitive_lstm = PrimitiveLSTM(seed=713, feature_size=feature_size, time_steps=7)
+    primitive_lstm = PrimitiveLSTM(feature_size=feature_size, time_steps=7)
     weights = {
         'out': tf.Variable(tf.random_normal([num_hidden, feature_size], dtype=tf.float64))
     }

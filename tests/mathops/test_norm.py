@@ -5,6 +5,9 @@ import tensorflow as tf
 from tensorflow.python.ops import linalg_ops
 from tfoptests.persistor import TensorFlowPersistor, BASE_DIR
 
+np.random.seed(seed=713)
+tf.set_random_seed(1)
+
 
 def _GetNormOpTest(dtype_, shape_, ord_, axis_, keep_dims_, use_static_shape_, save_dir_):
     def _CompareNorm(matrix):
@@ -64,6 +67,7 @@ def _GetNormOpTest(dtype_, shape_, ord_, axis_, keep_dims_, use_static_shape_, s
                 matrix += 1j * np.random.randn(*shape_).astype(dtype_)
             _CompareNorm(matrix)
             print("==========================================================")
+
     return Test
 
 
@@ -94,6 +98,7 @@ def test_norm():
                                                            use_static_shape, save_dir_i)
                                 test_func(save_dir_i)
                                 test_num += 1
+
 
 if __name__ == '__main__':
     test_norm()

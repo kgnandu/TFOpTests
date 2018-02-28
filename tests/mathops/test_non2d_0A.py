@@ -6,9 +6,9 @@ from tfoptests.test_graph import TestGraph
 
 class NonTwoDZeroA(TestGraph):
     def __init__(self, *args, **kwargs):
+        super(NonTwoDZeroA, self).__init__(*args, **kwargs)
         self.input_scalar_a = np.random.random_integers(0, 6)
         self.input_scalar_b = np.random.random_integers(0, 4)
-        super(NonTwoDZeroA, self).__init__(*args, **kwargs)
 
     def list_inputs(self):
         return ["scalarA", "scalarB"]

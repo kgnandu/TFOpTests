@@ -14,9 +14,9 @@ MNIST = input_data.read_data_sets('/tmp/tensorflow/mnist/input_data', one_hot=Tr
 
 class MnistImages(TestGraph):
     def __init__(self, test_size=100, *args, **kwargs):
+        super(MnistImages, self).__init__(*args, **kwargs)
         self.test_input = MNIST.test.images[:test_size].reshape((test_size, 28, 28, 1))
         self.test_target = MNIST.test.labels[:test_size]
-        super(MnistImages, self).__init__(*args, **kwargs)
 
     def list_inputs(self):
         return ["input"]

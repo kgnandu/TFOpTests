@@ -6,8 +6,8 @@ from tfoptests.test_graph import TestGraph
 
 class MathOpsThree(TestGraph):
     def __init__(self, *args, **kwargs):
-        self.input_0 = np.random.uniform(size=(4, 4, 16, 16))
         super(MathOpsThree, self).__init__(*args, **kwargs)
+        self.input_0 = np.random.uniform(size=(4, 4, 16, 16))
 
     def list_inputs(self):
         return ["input_0"]

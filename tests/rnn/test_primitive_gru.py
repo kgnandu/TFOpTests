@@ -11,10 +11,10 @@ Toy network for testing a primitve lstm - completely static
 
 class PrimitiveGRU(TestGraph):
     def __init__(self, feature_size=5, time_steps=9, *args, **kwargs):
+        super(PrimitiveGRU, self).__init__(*args, **kwargs)
         self.feature_size = feature_size
         self.time_steps = time_steps
         self.train_input, self.train_target = self._generate_time_seq(feature_size=feature_size, time_steps=time_steps)
-        super(PrimitiveGRU, self).__init__(*args, **kwargs)
 
     def _generate_time_seq(self, feature_size, time_steps, mini_batch=5):
         self.feature_size = 2

@@ -11,10 +11,10 @@ Tensor Transforms with rearranging values and some random ops
 
 class TensorRearrange(TestGraph):
     def __init__(self, *args, **kwargs):
+        super(TensorRearrange, self).__init__(*args, **kwargs)
         self.a = np.random.uniform(size=(2, 5, 4))
         self.b = np.random.uniform(size=(2, 3, 5, 4))
         self.c = np.random.uniform(size=(3, 1, 5, 4))
-        super(TensorRearrange, self).__init__(*args, **kwargs)
 
     def list_inputs(self):
         return ["input_0", "input_1", "input_2"]

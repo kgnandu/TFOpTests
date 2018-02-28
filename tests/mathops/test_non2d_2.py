@@ -6,11 +6,11 @@ from tfoptests.test_graph import TestGraph
 
 class NonTwoDTwo(TestGraph):
     def __init__(self, *args, **kwargs):
+        super(NonTwoDTwo, self).__init__(*args, **kwargs)
         self.input_rank2df = np.random.uniform(size=(1, 2))
         self.input_rank2db = np.random.uniform(size=(2, 1))
         self.input_rank3d = np.random.uniform(size=(1, 3, 2))
         self.input_rank3db = np.random.uniform(size=(3, 1, 2))
-        super(NonTwoDTwo, self).__init__(*args, **kwargs)
 
     def list_inputs(self):
         return ["rank2df", "rank2db", "rank3d", "rank3db"]

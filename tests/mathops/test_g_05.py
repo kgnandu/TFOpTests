@@ -6,9 +6,9 @@ from tfoptests.test_graph import TestGraph
 
 class MathOpsFive(TestGraph):
     def __init__(self, *args, **kwargs):
+        super(MathOpsFive, self).__init__(*args, **kwargs)
         self.input_1 = np.random.uniform(size=(2, 4, 3, 2))
         self.input_2 = np.random.uniform(size=(3, 2))
-        super(MathOpsFive, self).__init__(*args, **kwargs)
 
     def list_inputs(self):
         return ["input_1", "input_2"]

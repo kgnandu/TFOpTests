@@ -2,6 +2,8 @@ import numpy as np
 import tensorflow as tf
 from tfoptests.persistor import TensorFlowPersistor
 
+tf.set_random_seed(1)
+
 
 def test_simplecond():
     in0 = tf.Variable(np.linspace(1, 4, 4) + 1, name='greater')

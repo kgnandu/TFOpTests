@@ -6,9 +6,9 @@ import numpy as np
 
 class TwoInputs(TestGraph):
     def __init__(self, *args, **kwargs):
+        super(TwoInputs, self).__init__(*args, **kwargs)
         self.input_0 = np.linspace(1, 4, 4).reshape(2, 2)
         self.input_1 = 11
-        super(TwoInputs, self).__init__(*args, **kwargs)
 
     def list_inputs(self):
         return ["input_0", "input_1"]

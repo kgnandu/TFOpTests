@@ -11,10 +11,10 @@ Graph with a few ops and wierd shapes to hit edge cases
 
 class TensorDotMisc(TestGraph):
     def __init__(self, feature_size_a=[7, 2, 3, 4], feature_size_b=[5, 3, 4, 5], *args, **kwargs):
+        super(TensorDotMisc, self).__init__(*args, **kwargs)
         self.feature_size_a = feature_size_a
         self.feature_size_b = feature_size_b
         self.a_data, self.b_data = self.generate_data()
-        super(TensorDotMisc, self).__init__(*args, **kwargs)
 
     def list_inputs(self):
         return ["input_a", "input_b"]

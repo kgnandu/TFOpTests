@@ -6,8 +6,8 @@ from tfoptests.test_graph import TestGraph
 
 class NonTwoDZero(TestGraph):
     def __init__(self, *args, **kwargs):
-        self.input_scalar = np.random.uniform()
         super(NonTwoDZero, self).__init__(*args, **kwargs)
+        self.input_scalar = np.random.uniform()
 
     def list_inputs(self):
         return ["scalar"]

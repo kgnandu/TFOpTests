@@ -6,8 +6,8 @@ from tfoptests.test_graph import TestGraph
 
 class MultipleOuts(TestGraph):
     def __init__(self, *args, **kwargs):
-        self.input_0 = np.linspace(1, 120, 120).reshape(2, 3, 4, 5)
         super(MultipleOuts, self).__init__(*args, **kwargs)
+        self.input_0 = np.linspace(1, 120, 120).reshape(2, 3, 4, 5)
 
     def list_inputs(self):
         return ["input_0"]
