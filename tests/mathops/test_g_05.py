@@ -30,7 +30,7 @@ def test_mathops_five():
     mathops_5 = MathOpsFive(seed=19)
     in_node_1 = mathops_5.get_placeholder("input_1")
     in_node_2 = mathops_5.get_placeholder("input_2")
-    k0 = tf.Variable(tf.random_normal([3, 2]), name="in0", dtype=tf.float32)
+    k0 = tf.Variable(tf.random_normal([3, 2], dtype=tf.float64), name="in0")
     n0 = tf.gather(in_node_1, [1, 0], axis=-2)  # 2,4,2,2
     n1 = tf.gather_nd(n0, [[0, 2, 1], [0, 1, 0], [1, 3, 1]])  # 3,2
     out_node = tf.stack([n1, k0, in_node_2], axis=-1, name="output")  # 3, 2, 2
