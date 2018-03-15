@@ -22,7 +22,7 @@ class MathOpsFive(TestGraph):
     def _get_placeholder_shape(self, name):
         if name == "input_1":
             return [2, 4, 3, 2]
-        if name == "input_1":
+        if name == "input_2":
             return [3, 2]
 
 
