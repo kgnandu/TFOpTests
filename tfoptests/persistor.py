@@ -13,7 +13,8 @@ import tensorflow as tf
 import numpy as np
 from tensorflow.python.tools import freeze_graph
 
-BASE_DIR = os.environ['DL4J_TEST_RESOURCES'] + '/src/main/resources/tf_graphs/examples'
+# BASE_DIR = os.environ['DL4J_TEST_RESOURCES'] + '/src/main/resources/tf_graphs/examples'
+BASE_DIR = '/Users/susaneraly/SKYMIND/dl4j-test-resources/src/main/resources/tf_graphs/examples'
 
 
 class TensorFlowPersistor:
