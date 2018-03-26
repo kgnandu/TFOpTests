@@ -4,9 +4,9 @@ from tfoptests.persistor import TensorFlowPersistor
 from tfoptests.test_graph import TestGraph
 
 
-class MathOpsFive(TestGraph):
+class MathOpsSix(TestGraph):
     def __init__(self, *args, **kwargs):
-        super(MathOpsFive, self).__init__(*args, **kwargs)
+        super(MathOpsSix, self).__init__(*args, **kwargs)
         self.input_1 = np.random.uniform(size=(2, 4, 3, 2))
         self.input_2 = np.random.uniform(size=(3, 2))
 
@@ -26,19 +26,20 @@ class MathOpsFive(TestGraph):
             return [3, 2]
 
 
-def test_mathops_five():
-    mathops_5 = MathOpsFive(seed=19)
+def test_mathops_six():
+    mathops_5 = MathOpsSix(seed=19)
     in_node_1 = mathops_5.get_placeholder("input_1")
     in_node_2 = mathops_5.get_placeholder("input_2")
     k0 = tf.Variable(tf.random_normal([3, 2], dtype=tf.float64), name="in0")
-    n0 = tf.gather(in_node_1, [1, 0], axis=-2)  # 2,4,2,2
-    n1 = tf.gather_nd(n0, [[0, 2, 1], [0, 1, 0], [1, 3, 1]])  # 3,2
-    out_node = tf.stack([n1, k0, in_node_2], axis=-1, name="output")  # 3, 2, 2
+    n0 = tf.reduce_sum(in_node_1, axis=[0, 1], keep_dims=False)  # 3,2
+    n1 = tf.reduce_max(in_node_2, keep_dims=True)  # 1,1
+    n2 = tf.add(k0, n0)
+    out_node = tf.add(n1, n2, name="output")
 
     placeholders = [in_node_1, in_node_2]
     predictions = [out_node]
     # Run and persist
-    tfp = TensorFlowPersistor(save_dir="g_05")
+    tfp = TensorFlowPersistor(save_dir="g_06")
     tfp.set_placeholders(placeholders) \
         .set_output_tensors(predictions) \
         .set_test_data(mathops_5.get_test_data()) \
@@ -46,4 +47,4 @@ def test_mathops_five():
 
 
 if __name__ == '__main__':
-    test_mathops_five()
+    test_mathops_six()
