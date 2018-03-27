@@ -28,7 +28,7 @@ def test_bias_add():
     predictions = [out_node]
 
     # Run and persist
-    tfp = TensorFlowPersistor(save_dir="mlp_00")
+    tfp = TensorFlowPersistor(save_dir="bias_add")
     predictions = tfp \
         .set_placeholders(placeholders) \
         .set_output_tensors(predictions) \
