@@ -20,7 +20,7 @@ def test_pool_1():
     placeholders = [in_node]
     predictions = [out_node]
 
-    tfp = TensorFlowPersistor(save_dir="pool_0")
+    tfp = TensorFlowPersistor(save_dir="pool_1")
     predictions_after_freeze = tfp \
         .set_placeholders(placeholders) \
         .set_output_tensors(predictions) \
