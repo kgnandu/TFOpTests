@@ -27,9 +27,9 @@ class MathOpsSeven(TestGraph):
 
 
 def test_mathops_seven():
-    mathops_5 = MathOpsSeven(seed=19)
-    in_node_1 = mathops_5.get_placeholder("input_1", data_type=tf.int32)
-    in_node_2 = mathops_5.get_placeholder("input_2")
+    mathops_7 = MathOpsSeven(seed=19)
+    in_node_1 = mathops_7.get_placeholder("input_1", data_type=tf.int32)
+    in_node_2 = mathops_7.get_placeholder("input_2")
     w = tf.Variable(tf.random_normal([8, 10], dtype=tf.float64), name="w")
     b = tf.cast(tf.invert_permutation(in_node_1), dtype=tf.float64)
     n1 = tf.nn.xw_plus_b(in_node_2, w, b)
@@ -48,7 +48,7 @@ def test_mathops_seven():
     tfp = TensorFlowPersistor(save_dir="g_07")
     predictions_after_freeze = tfp.set_placeholders(placeholders) \
         .set_output_tensors(predictions) \
-        .set_test_data(mathops_5.get_test_data()) \
+        .set_test_data(mathops_7.get_test_data()) \
         .build_save_frozen_graph()
     print(predictions_after_freeze[0].shape)
 

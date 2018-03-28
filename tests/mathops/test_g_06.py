@@ -27,9 +27,9 @@ class MathOpsSix(TestGraph):
 
 
 def test_mathops_six():
-    mathops_5 = MathOpsSix(seed=19)
-    in_node_1 = mathops_5.get_placeholder("input_1")
-    in_node_2 = mathops_5.get_placeholder("input_2")
+    mathops_6 = MathOpsSix(seed=19)
+    in_node_1 = mathops_6.get_placeholder("input_1")
+    in_node_2 = mathops_6.get_placeholder("input_2")
     k0 = tf.Variable(tf.random_normal([3, 2], dtype=tf.float64), name="in0")
     n0 = tf.reduce_sum(in_node_1, axis=[0, 1], keep_dims=False)  # 3,2
     n1 = tf.reduce_max(in_node_2, keep_dims=True)  # 1,1
@@ -42,7 +42,7 @@ def test_mathops_six():
     tfp = TensorFlowPersistor(save_dir="g_06")
     tfp.set_placeholders(placeholders) \
         .set_output_tensors(predictions) \
-        .set_test_data(mathops_5.get_test_data()) \
+        .set_test_data(mathops_6.get_test_data()) \
         .build_save_frozen_graph()
 
 
