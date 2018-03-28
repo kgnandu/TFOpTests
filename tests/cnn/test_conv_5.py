@@ -31,8 +31,9 @@ def test_conv_5():
     pool_nd = PoolND(seed=124)
     in_node = pool_nd.get_placeholder("input", data_type=tf.float32)
     w = tf.Variable(tf.random_normal([2, 2]), name="in0", dtype=tf.float32)
-    in1 = tf.nn.pool(input=in_node, window_shape=[1, 2, 2], pooling_type="MAX", padding="SAME")
-    in2 = tf.nn.relu_layer(tf.reshape(in1, [4, 2]), w, tf.random_normal([2]))
+    # in1 = tf.nn.pool(input=in_node, window_shape=[1, 2, 2], pooling_type="MAX", padding="SAME")
+    #for so - called "global normalization", used with convolutional filters with shape[batch, height, width, depth], pass axes=[0, 1, 2].
+    in2 = tf.nn.relu_layer(tf.reshape(in_node, [4, 2]), w, tf.random_normal([2]))
     in3 = tf.reciprocal(in2)
     in4 = tf.squared_difference(in2, in3)
     out_node = tf.nn.l2_loss(in4, name="output")
