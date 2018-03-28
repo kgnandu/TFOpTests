@@ -120,6 +120,7 @@ Given the input/placeholder tensors along with their values and the output tenso
 - write graph inputs, graph outputs and intermediate node results
 - run asserts to ensure that predictions before and after freezing are the same
 etc.
+
 It is the .get_test_data() method implemented in TestGraph that provides the TFP with the placeholder name-value dict it needs to run through the graph.
 
 
