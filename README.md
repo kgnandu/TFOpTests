@@ -36,61 +36,98 @@ python -m pytest
 
 ## Adding new tests
 
-The base for adding any new tests is extending a so called `TensorFlowPersistor` (TFP), which is defined in `tfoptests.persistor`. This abstract base class has two members you need to implement:
+The base for adding any new tests is extending `TestGraph`, which is defined in `tfoptests.test_graph`. 
+You will have to override functionality, as suitable, for all the methods except the `get_test_data` and the `get_placeholder` methods:
 
 ```python
-@abstractmethod
-def _get_input(self, name):
-    '''Get input tensor for given node name'''
-    raise NotImplementedError
+class TestGraph(object):
+    def __init__(self, seed=None, verbose=True):
+        tf.set_random_seed(1)
+        seed = 713 if seed is None else seed
+        np.random.seed(seed=seed)
+        self.verbose = verbose
+        self.seed = seed
 
-@abstractmethod
-def _get_input_shape(self, name):
-    '''Get input tensor shape for given node name'''
-    raise NotImplementedError
+    def get_placeholder_input(self, name):
+        '''Get input tensor for given node name'''
+        return None
+
+    def _get_placeholder_shape(self, name):
+        '''Get input tensor shape for given node name'''
+        return None
+
+    def list_inputs(self):
+        '''List names of input nodes'''
+        return ["input"]
+
+    def get_placeholder(self, name, data_type="float64"):
+        return tf.placeholder(dtype=data_type, shape=self._get_placeholder_shape(name), name=name)
+
+    def get_test_data(self):
+        test_dict = {}
+        for an_input in self.list_inputs():
+            test_dict[an_input] = self.get_placeholder_input(an_input)
+        return test_dict
 ```
 
-These two methods specify the input data and its shape for the graph we want to run and persist.
+These methods specify the input data and its shape for the graph we want to run, persist and test.
 
-To give an example, to implement a persistor for an MLP with added bias terms, you define:
+Below we walk through a very elementary example where we set up a graph that contains a matrix multiply and run it through some methods with the `TensorFlowPersistor`
 
 ```python
-import numpy as np
-from tfoptests.persistor import TensorFlowPersistor as TFP
+class MatMulOrder(TestGraph):
+    def list_inputs(self):
+        return ["input_0", "input_1"]
 
-
-class BiasAdd(TFP):
-    def _get_input(self, name):
-        if name == "input":
-            input_0 = np.linspace(1, 40, 40).reshape(10, 4)
+    def get_placeholder_input(self, name):
+        if name == "input_0":
+            input_0 = np.random.uniform(size=(3, 3))
             return input_0
+        if name == "input_1":
+            input_1 = np.random.uniform(size=(3, 3)) + np.random.uniform(size=(3, 3))
+            return input_1
 
-    def _get_input_shape(self, name):
-        if name == "input":
-            return [None, 4]
+    def _get_placeholder_shape(self, name):
+        if name == "input_0" or name == "input_1":
+            return [None, 3]
 ```
 
-Running the test is a simple four-step procedure:
+The class above inherits from TestGraph and all we do is specify input names and input shapes.
+
+And to test we add in functionality and ops as needed as shown below:
 
 ```python
-# 1. Initialize your TFP
-tfp = BiasAdd(save_dir="bias_add", seed=1337)
+def test_mat_mul_order():
+    simple_m = MatMulOrder(seed=713)
+    in0 = simple_m.get_placeholder("input_0")
+    in1 = simple_m.get_placeholder("input_1")
+    k0 = tf.Variable(tf.random_normal([3, 3], dtype=tf.float64), name="in0")
+    out_node = tf.matmul(k0, tf.matmul(in0, in1), name="output")
 
-# 2. Set input tensor
-in_node = tfp.get_placeholder("input")
-tfp.set_placeholders([in_node])
-
-# 3. Set output tensor
-biases = tf.Variable(tf.lin_space(1.0, 4.0, 4), name="bias")
-out_node = tf.nn.bias_add(in_node, tf.cast(biases, dtype=tf.float64), name="output")
-tfp.set_output_tensors([out_node])
-
-# 4. Run and persist your tensorflow graph
-tfp.run_and_save_graph()
+    placeholders = [in0, in1]
+    predictions = [out_node]
+    # Run and persist
+    tfp = TensorFlowPersistor(save_dir="math_mul_order")
+    tfp.set_placeholders(placeholders) \
+        .set_output_tensors(predictions) \
+        .set_test_data(simple_m.get_test_data()) \
+        .build_save_frozen_graph()
 ```
 
-Note that `run_and_save_graph` does a lot of things for you, such as persisting the tf graph, inputs, outputs and intermediate results. Check out the implementation for details.
+Note the `TensorFlowPersistor` (TFP) method call. 
+Given the input/placeholder tensors along with their values and the output tensors under the hood it will:
+- persist the tf graph after freezing
+- write graph inputs, graph outputs and intermediate node results
+- run asserts to ensure that predictions before and after freezing are the same
+etc.
+
+It is the .get_test_data() method implemented in TestGraph that provides the TFP with the placeholder name-value dict it needs to run through the graph.
+
+
+These graphs are then used in integration tests for our _tensorflow model import_ . Graphs are imported into samediff and checks are run to ensure the correctness of the libnd4j implementation and its mapping.
+
+Checks on the java side can be found in the nd4j repository in this [package](https://github.com/deeplearning4j/nd4j/tree/master/nd4j-backends/nd4j-tests/src/test/java/org/nd4j/imports/TFGraphs). Take a look at [TFGraphTestAllSameDiff](https://github.com/deeplearning4j/nd4j/tree/master/nd4j-backends/nd4j-tests/src/test/java/org/nd4j/imports/TFGraphs/TFGraphTestAllSameDiff) to see how checks are run with the SameDiff executor.
 
 ## Contributing
 
-Skymind.ai uses the output of these test results as integration tests for our _tensorflow model import_. If there are missing operations or architectures that need to be covered, make sure to file an issue or open a pull request.  
+If there are missing operations or architectures that need to be covered, make sure to file an issue or open a pull request.  
