@@ -36,61 +36,105 @@ python -m pytest
 
 ## Adding new tests
 
-The base for adding any new tests is extending a so called `TensorFlowPersistor` (TFP), which is defined in `tfoptests.persistor`. This abstract base class has two members you need to implement:
+The base for adding any new tests is extending a so called `TestGraph`, which is defined in `tfoptests.test_graph`. You will have to override functionality, as suitable, for all the methods except the `get_test_data` and the `get_placeholder` methods:
 
 ```python
-@abstractmethod
-def _get_input(self, name):
-    '''Get input tensor for given node name'''
-    raise NotImplementedError
+    def get_placeholder_input(self, name):
+        '''Get input tensor for given node name'''
+        return None
 
-@abstractmethod
-def _get_input_shape(self, name):
-    '''Get input tensor shape for given node name'''
-    raise NotImplementedError
+    def _get_placeholder_shape(self, name):
+        '''Get input tensor shape for given node name'''
+        return None
+
+    def list_inputs(self):
+        '''List names of input nodes'''
+        return ["input"]
 ```
 
-These two methods specify the input data and its shape for the graph we want to run and persist.
+These methods specify the input data and its shape for the graph we want to run, persist and test.
 
-To give an example, to implement a persistor for an MLP with added bias terms, you define:
+To give an example, to set up inputs and placeholders for a simple MLP:
 
 ```python
 import numpy as np
-from tfoptests.persistor import TensorFlowPersistor as TFP
+import tensorflow as tf
+from tfoptests.persistor import TensorFlowPersistor
+from tfoptests.test_graph import TestGraph
+
+n_hidden_1 = 10
+num_input = 5
+mini_batch = 4
+num_classes = 3
 
 
-class BiasAdd(TFP):
-    def _get_input(self, name):
+class VanillaMLP(TestGraph):
+    def list_inputs(self):
+        return ["input"]
+
+    def get_placeholder_input(self, name):
         if name == "input":
-            input_0 = np.linspace(1, 40, 40).reshape(10, 4)
+            input_0 = np.random.uniform(size=(mini_batch, num_input))
             return input_0
 
-    def _get_input_shape(self, name):
+    def _get_placeholder_shape(self, name):
         if name == "input":
-            return [None, 4]
+            return [None, num_input]
 ```
 
-Running the test is a simple four-step procedure:
+And to test we add in functionality and ops as needed as shown below:
 
 ```python
-# 1. Initialize your TFP
-tfp = BiasAdd(save_dir="bias_add", seed=1337)
+def test_vanilla_mlp():
+    #Extends from TestGraph
+    vanilla_mlp = VanillaMLP(seed=1337)
+    #input placeholder
+    in_node = vanilla_mlp.get_placeholder("input")
+    # Define model
+    weights = dict(
+        h1=tf.Variable(tf.random_normal([num_input, n_hidden_1], dtype=tf.float64),
+                       name="l0W"),
+        out=tf.Variable(tf.random_normal([n_hidden_1, num_classes], dtype=tf.float64),
+                        name="l1W")
+    )
+    biases = dict(
+        b1=tf.Variable(tf.random_normal([n_hidden_1], dtype=tf.float64), name="l0B"),
+        out=tf.Variable(tf.random_normal([num_classes], dtype=tf.float64), name="l1B")
+    )
+    layer_1 = tf.nn.bias_add(tf.matmul(in_node, weights['h1']), biases['b1'], name="l0Preout")
+    layer_1_post_actv = tf.abs(layer_1, name="l0Out")
+    logits = tf.nn.bias_add(tf.matmul(layer_1_post_actv, weights['out']), biases['out'], name="l1PreOut")
+    #output
+    out_node = tf.nn.softmax(logits, name='output')
 
-# 2. Set input tensor
-in_node = tfp.get_placeholder("input")
-tfp.set_placeholders([in_node])
+    #Add input placeholders to a list
+    placeholders = [in_node]
+    #Add network outptus to a list
+    predictions = [out_node]
 
-# 3. Set output tensor
-biases = tf.Variable(tf.lin_space(1.0, 4.0, 4), name="bias")
-out_node = tf.nn.bias_add(in_node, tf.cast(biases, dtype=tf.float64), name="output")
-tfp.set_output_tensors([out_node])
-
-# 4. Run and persist your tensorflow graph
-tfp.run_and_save_graph()
+    # Run and persist and set the save_dir to the name of the directory to write contents too
+    tfp = TensorFlowPersistor(save_dir="mlp_00")
+    predictions = tfp \
+        .set_placeholders(placeholders) \
+        .set_output_tensors(predictions) \
+        .set_test_data(vanilla_mlp.get_test_data()) \
+        .build_save_frozen_graph()
 ```
 
-Note that `run_and_save_graph` does a lot of things for you, such as persisting the tf graph, inputs, outputs and intermediate results. Check out the implementation for details.
+Note the `TensorFlowPersistor` method call. 
+Under the hood it will:
+- persist the tf graph after freezing
+- write graph inputs, graph outputs and intermediate node results
+- run asserts to ensure that predictions before and after freezing are the same
+etc.
+
+Check out the implementation for more details. 
+
+An extremely bare bones example can be found in [test_expand_dim](tests/mathops/test_expand_dim.py)
+
+These graphs are then used in integration tests for our _tensorflow model import_ . Graphs are imported into samediff and checks are run to ensure the correctness of the libnd4j implementation and its mapping.
+Checks on the java side can be found in the nd4j repository in this [package](https://github.com/deeplearning4j/nd4j/tree/master/nd4j-backends/nd4j-tests/src/test/java/org/nd4j/imports/TFGraphs)
 
 ## Contributing
 
-Skymind.ai uses the output of these test results as integration tests for our _tensorflow model import_. If there are missing operations or architectures that need to be covered, make sure to file an issue or open a pull request.  
+If there are missing operations or architectures that need to be covered, make sure to file an issue or open a pull request.  
