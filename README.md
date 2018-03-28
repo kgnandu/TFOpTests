@@ -125,7 +125,8 @@ It is the .get_test_data() method implemented in TestGraph that provides the TFP
 
 
 These graphs are then used in integration tests for our _tensorflow model import_ . Graphs are imported into samediff and checks are run to ensure the correctness of the libnd4j implementation and its mapping.
-Checks on the java side can be found in the nd4j repository in this [package](https://github.com/deeplearning4j/nd4j/tree/master/nd4j-backends/nd4j-tests/src/test/java/org/nd4j/imports/TFGraphs)
+
+Checks on the java side can be found in the nd4j repository in this [package](https://github.com/deeplearning4j/nd4j/tree/master/nd4j-backends/nd4j-tests/src/test/java/org/nd4j/imports/TFGraphs). Take a look at [TFGraphTestAllSameDiff](https://github.com/deeplearning4j/nd4j/tree/master/nd4j-backends/nd4j-tests/src/test/java/org/nd4j/imports/TFGraphs/TFGraphTestAllSameDiff) to see how checks are run with the SameDiff executor.
 
 ## Contributing
 
