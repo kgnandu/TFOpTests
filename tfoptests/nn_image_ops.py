@@ -13,6 +13,9 @@ class NNImageOps:
         self.padding = 'SAME'
         self.filter_size = None
         self.filter = None
+        self.output_shape = None
+        self.rate = None
+        self.pointwise_filter = None
 
     def set_image(self, image):
         # [batch, in_height, in_width, in_channels]
@@ -43,6 +46,16 @@ class NNImageOps:
     def set_stride_size(self, stride_val):
         self.strides = stride_val
 
+    def set_output_shape(self, output_shape):
+        self.output_shape = output_shape
+
+    def set_rate(self, rate):
+        self.rate = rate
+
+    def set_pointwise_filter(self, pointwise_filter):
+        self.pointwise_filter = tf.Variable(tf.random_normal(pointwise_filter), name="pointwise_filterW" + str(self.node_num),
+                                  dtype=tf.float32)
+
     def execute(self, some_op):
         self.node_num += 1
         method_name = 'execute_' + some_op
@@ -71,6 +84,26 @@ class NNImageOps:
     def execute_max_pool(self):
         return tf.nn.max_pool(self.inp, self.kernel_size, self.strides, self.padding,
                               name="max_pool" + str(self.node_num))
+
+    def execute_conv2d_transpose(self):
+        return tf.nn.conv2d_transpose(self.inp, self.filter, self.output_shape, self.strides, self.padding,
+                                      name="conv2d_transpose" + str(self.node_num))
+
+    def execute_atrous_conv2d_transpose(self):
+        return tf.nn.atrous_conv2d_transpose(self.inp, self.filter, self.output_shape, self.rate, self.padding,
+                                             name="atrous_conv2d_transpose" + str(self.node_num))
+
+    def execute_conv1d(self):
+        return tf.nn.conv1d(self.inp, self.filter, self.strides, self.padding,
+                            name="conv1d" + str(self.node_num))
+
+    def execute_depthwise_conv2d(self):
+        return tf.nn.depthwise_conv2d(self.inp, self.filter, self.strides, self.padding, self.rate,
+                                      name="depthwise_conv2d" + str(self.node_num))
+
+    def execute_separable_conv2d(self):
+        return tf.nn.separable_conv2d(self.inp, self.filter, self.pointwise_filter, self.strides, self.padding,
+                                      self.rate, name="separable_conv2d" + str(self.node_num))
 
     def flatten_convolution(self, tensor_in):
         tensor_in_shape = tensor_in.get_shape()
